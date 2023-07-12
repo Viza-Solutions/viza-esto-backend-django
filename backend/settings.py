@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'client_app',
     'property_app',
     'tenant_app',
+    'payment_app'
 ]
 
 MIDDLEWARE = [
