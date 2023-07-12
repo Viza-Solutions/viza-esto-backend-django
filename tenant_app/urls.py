@@ -18,4 +18,9 @@ urlpatterns = [
         views.property_tenant_list,
         name="property_tenant_list",
     ),
+    path(
+        "tenants/transfer-room/<int:pk>",
+        views.transfer_tenant_room,
+        name="transfer_tenant_room",
+    ),
 ]

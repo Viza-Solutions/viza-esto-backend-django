@@ -160,6 +160,59 @@ def update_tenant(request, pk):
         )
 
 
+@api_view(["PUT"])
+def transfer_tenant_room(request, pk):
+    try:
+        tenant = Tenant.objects.get(pk=pk, deleted=False)
+        serializer = TenantRoomTransferSerializer(
+            tenant, data=request.data, partial=True
+        )
+        if serializer.is_valid():
+            updated_tenant = serializer.validated_data
+
+            new_room = updated_tenant.get("room")
+            property_id = tenant.property.id
+
+            if new_room.property.id != property_id:
+                raise serializers.ValidationError(
+                    {
+                        "error": "You can only transfer the tenant within the same property."
+                    }
+                )
+
+            if not new_room.is_available:
+                raise serializers.ValidationError(
+                    {"error": "The selected room is not available for allocation."}
+                )
+
+            if new_room.deleted:
+                raise serializers.ValidationError(
+                    {"error": "The selected room has been deleted."}
+                )
+
+            old_room = tenant.room
+
+            # Update the tenant's room
+            tenant.room = new_room
+            tenant.save()
+
+            # Set is_available field of the old and new rooms
+            old_room.is_available = True
+            old_room.save()
+
+            new_room.is_available = False
+            new_room.save()
+
+            return Response(
+                {"message": "Tenant room transfer successful", "data": serializer.data}
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Tenant.DoesNotExist:
+        return Response(
+            {"message": "Tenant not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
+
 @api_view(["DELETE"])
 def delete_tenant(request, pk):
     try:
