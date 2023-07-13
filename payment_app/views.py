@@ -114,7 +114,7 @@ def create_payment_transaction(request):
         tenant_id = serializer.validated_data["tenant"].id
 
         # Retrieve tenant and room price in a single query
-        tenant = Tenant.objects.select_related("room").get(pk=tenant_id)
+        tenant = Tenant.objects.select_related("room", "client").get(pk=tenant_id)
         room_price = tenant.room.monthly_price
 
         current_month = datetime.utcnow().month
@@ -139,6 +139,16 @@ def create_payment_transaction(request):
             )
         else:
             new_balance = serializer.validated_data["amount"] - room_price
+
+        # Validate the client ID
+        client_id = serializer.validated_data["client"].id
+        if tenant.client_id != client_id:
+            return Response(
+                {
+                    "error": "Invalid client id provided. The client does not match the tenant."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         # Generate a unique UUID
         uuid = str(uuid4())
