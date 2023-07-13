@@ -29,4 +29,14 @@ urlpatterns = [
         delete_payment_method,
         name="delete_payment_method",
     ),
+    path(
+        "payment-transactions",
+        create_payment_transaction,
+        name="create_payment_transaction",
+    ),
+    path(
+        "payment-transactions/delete-all",
+        delete_all_payment_transactions,
+        name="delete-all-payment-transactions",
+    ),
 ]

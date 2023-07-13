@@ -58,7 +58,7 @@ class Room(models.Model):
     bedrooms = models.PositiveIntegerField(null=True, blank=True)
     bathrooms = models.PositiveIntegerField(null=True, blank=True)
     size = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    price = models.DecimalField(
+    monthly_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
     )
