@@ -6,7 +6,6 @@ from django.conf import settings
 from uuid import uuid4
 
 
-
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -41,7 +40,7 @@ class PaymentTransaction(models.Model):
     )
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     reversed = models.BooleanField(default=False)
-    uuid = models.UUIDField(default=uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid4, unique=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

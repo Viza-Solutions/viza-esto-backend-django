@@ -162,7 +162,10 @@ def create_payment_transaction(request):
         return Response(
             {
                 "message": "Payment transaction created successfully",
-                "data": serializer.data,
+                "receipt_number": serializer.data["id"],
+                "balance": serializer.data["balance"],
+                # all the data
+                # "data": serializer.data,
             },
             status=status.HTTP_201_CREATED,
         )
