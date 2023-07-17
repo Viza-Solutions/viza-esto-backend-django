@@ -20,6 +20,7 @@ class Property(models.Model):
     town = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+    rooms = models.PositiveIntegerField(default=30)
     deleted = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -23,8 +23,6 @@ class PaymentMethod(models.Model):
     def __str__(self):
         return self.name
 
-    from django.db import models
-
 
 class PaymentTransaction(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
