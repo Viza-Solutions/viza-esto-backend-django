@@ -50,7 +50,7 @@ class LoginAPIView(GenericAPIView):
 
         if user:
             serializer = self.serializer_class(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"Details":serializer.data, "Code":200,"Success":True}, status=status.HTTP_200_OK)
 
         return Response(
             {"error": "Invalid credentials try again"},
