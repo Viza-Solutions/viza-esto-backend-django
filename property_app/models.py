@@ -16,9 +16,9 @@ class Property(models.Model):
     added_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
     )
-    country = models.CharField(max_length=255, default="Kenya")
-    town = models.CharField(max_length=255, default="Nairobi")
-    address = models.CharField(max_length=255, default="Roysa")
+    country = models.CharField(max_length=255)
+    town = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     deleted = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
