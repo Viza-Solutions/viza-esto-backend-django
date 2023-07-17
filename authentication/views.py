@@ -25,7 +25,7 @@ class RegisterAPIView(GenericAPIView):
     serializer_class = RegisterSerializer
 
     # bypass authentication
-    # authentication_classes = []
+    authentication_classes = []
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
