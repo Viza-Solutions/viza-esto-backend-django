@@ -116,7 +116,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("user status"), max_length=15, choices=STATUS_CHOICES, blank=False
     )
 
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=1)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
 
     # created at
