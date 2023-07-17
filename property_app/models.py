@@ -16,12 +16,12 @@ class Property(models.Model):
     added_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
     )
-    county = models.CharField(max_length=255)
-    town = models.CharField(max_length=255)
+    country = models.CharField(max_length=255, default="Kenya")
+    town = models.CharField(max_length=255, default="Nairobi")
+    address = models.CharField(max_length=255, default="Roysa")
     description = models.TextField(null=True, blank=True)
     deleted = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
-    street = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
