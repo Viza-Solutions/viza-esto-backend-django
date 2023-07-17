@@ -17,9 +17,9 @@ class Client(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     email = models.EmailField(unique=True)
     deleted = models.BooleanField(default=False)
-    added_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
-    )
+    # added_by = models.ForeignKey(
+    #     settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
+    # )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

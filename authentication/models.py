@@ -13,7 +13,7 @@ from django.conf import settings
 import jwt
 from datetime import datetime, timedelta
 
-from django.contrib.auth.models import User
+from client_app.models import *
 
 
 
