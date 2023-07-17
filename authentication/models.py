@@ -13,6 +13,9 @@ from django.conf import settings
 import jwt
 from datetime import datetime, timedelta
 
+from django.contrib.auth.models import User
+
+
 
 # hello this is Zacky project
 class MyUserManager(UserManager):
@@ -112,6 +115,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_status = models.CharField(
         _("user status"), max_length=15, choices=STATUS_CHOICES, blank=False
     )
+
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=1)
+
 
     # created at
     created_at = models.DateTimeField(_("created at"), default=timezone.now)
