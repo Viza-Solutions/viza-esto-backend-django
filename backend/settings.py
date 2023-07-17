@@ -18,16 +18,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-import environ
 
-env = environ.Env()
-environ.Env.read_env()
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = 'django-insecure-4fp^$m%@j5@o3xe-%w*^b@-s#ku@*8436(6pk#b*2d-d@khjyy'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -80,25 +76,18 @@ TEMPLATES = [
         },
     },
 ]
-# https://vizasolutions.co.ke/
+
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-import dj_database_url
-DATABASES={
-    #  'default':dj_database_url.parse('postgres://tododb_f2wq_user:yrwYzyW911TejHyLos3Kbf76xL5FpU6N@dpg-ciouu4lgkuvrtoatcung-a.oregon-postgres.render.com/tododb_f2wq')
-     'default':dj_database_url.parse(env('DATABASE_URL'))
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
@@ -167,7 +156,6 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://localhost:5173',
 ]
 
 CORS_ALLOW_METHODS = [
