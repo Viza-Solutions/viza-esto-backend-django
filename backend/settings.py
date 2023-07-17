@@ -160,13 +160,6 @@ REST_FRAMEWORK = {
 }
 
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-#     # "https://example.com",
-#     # Add more origins as needed
-
-# ]
-
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ALLOWED_ORIGINS = [
