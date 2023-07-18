@@ -261,7 +261,16 @@ from rest_framework.views import APIView
 from .models import Property
 from .serializers import PropertySerializer
 
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import AllowAny
+
 class ExcelDownloadView(APIView):
+    # Override authentication_classes to disable authentication for this view
+    authentication_classes = []
+    
+    # Override permission_classes to allow unauthenticated access
+    permission_classes = [AllowAny]
+
     def get(self, request):
         queryset = Property.objects.all()
         serializer = PropertySerializer(queryset, many=True)
