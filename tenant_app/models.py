@@ -33,8 +33,8 @@ class Tenant(models.Model):
     
 
     def save(self, *args, **kwargs):
-        # Convert the name to title case before saving
+        # Convert the name and alternative names to title case before saving
         self.fullname = self.fullname.title()
         self.alternative_names = self.alternative_names.title()
-        super(Property, self).save(*args, **kwargs)
+        super(Tenant, self).save(*args, **kwargs)
 

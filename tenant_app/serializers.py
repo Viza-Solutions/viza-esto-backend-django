@@ -10,6 +10,7 @@ class TenantSerializer(serializers.ModelSerializer):
         def to_internal_value(self, data):
             # Convert the 'name' field to title case
             data["fullname"] = data.get("fullname", "").title()
+            data["alternative_names"] = data.get("alternative_names", "").title()
             return super().to_internal_value(data)
 
 
@@ -35,4 +36,5 @@ class TenantUpdateSerializer(serializers.ModelSerializer):
         def to_internal_value(self, data):
             # Convert the 'name' field to title case
             data["fullname"] = data.get("fullname", "").title()
+            data["alternative_names"] = data.get("alternative_names", "").title()
             return super().to_internal_value(data)
