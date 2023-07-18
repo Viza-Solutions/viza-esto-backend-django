@@ -275,10 +275,5 @@ class ExcelDownloadView(APIView):
         queryset = Property.objects.all()
         serializer = PropertySerializer(queryset, many=True)
 
-        data = tablib.Dataset(headers=list(serializer.data[0].keys()))
-        for item in serializer.data:
-            data.append(list(item.values()))
+        return ExcelResponse(serializer.data)
 
-        response = StreamingHttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="property_data.xlsx"'
-        return response
