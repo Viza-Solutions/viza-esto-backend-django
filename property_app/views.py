@@ -100,6 +100,7 @@ def property_room_list(request, property_id):
 
 @api_view(["POST"])
 def create_room(request):
+    request.data["added_by"] = request.user.id
     serializer = RoomSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

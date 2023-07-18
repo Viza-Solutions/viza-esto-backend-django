@@ -5,6 +5,9 @@ from client_app.models import *
 from django.conf import settings
 
 
+from django.db import models
+from django.conf import settings
+
 class Property(models.Model):
     STATUS_CHOICES = (
         ("Active", "Active"),
@@ -28,6 +31,12 @@ class Property(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        # Convert the name to title case before saving
+        self.name = self.name.title()
+        super(Property, self).save(*args, **kwargs)
+
 
 
 class Room(models.Model):
