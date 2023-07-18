@@ -110,7 +110,7 @@ def property_available_room_list(request, property_id):
 
         serializer = RoomSerializer(rooms, many=True)
         return Response(serializer.data)
-    except Exception as e:
+    except Exception as e: 
         return Response({"error": str(e)}, status=400)
 
 
