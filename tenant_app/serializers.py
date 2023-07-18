@@ -33,8 +33,8 @@ class TenantUpdateSerializer(serializers.ModelSerializer):
             "status",
         ]
 
-        def save(self, *args, **kwargs):
-            # Convert the name and alternative names to title case before saving
-            self.fullname = self.fullname.title()
-            self.alternative_names = self.alternative_names.title()
-            super().save(*args, **kwargs)
+        def to_internal_value(self, data):
+            # Convert the 'name' field to title case
+            data["fullname"] = data.get("fullname", "").title()
+            data["alternative_names"] = data.get("alternative_names", "").title()
+            return super().to_internal_value(data)

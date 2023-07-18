@@ -38,3 +38,4 @@ class Tenant(models.Model):
         self.alternative_names = self.alternative_names.title()
         super(Tenant, self).save(*args, **kwargs)
 
+

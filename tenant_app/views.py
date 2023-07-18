@@ -42,7 +42,6 @@ def create_tenant(request):
 
         try:
             property_ = Property.objects.get(id=property_id)
-            print(property_)
             if room.property_id != property_id:
                 raise serializers.ValidationError(
                     {
@@ -55,8 +54,9 @@ def create_tenant(request):
             )
 
         # Check if the user with the same fullname already exists in the same property
+        title_case_name = tenant["fullname"].title()
         existing_tenants = Tenant.objects.filter(
-            fullname=tenant["fullname"], property=tenant["property"], deleted=False
+            fullname=title_case_name, property=tenant["property"], deleted=False
         )
         if "id" in tenant:
             # Exclude the current instance when checking for duplicates during update
