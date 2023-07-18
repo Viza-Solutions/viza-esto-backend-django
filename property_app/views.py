@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import *
 from .serializers import *
+from rest_framework.exceptions import NotFound
 from rest_framework import status
 
 
@@ -100,11 +101,17 @@ def property_room_list(request, property_id):
 
 @api_view(["GET"])
 def property_available_room_list(request, property_id):
-    rooms = Room.objects.filter(
-        deleted=False, property_id=property_id, is_available=True
-    )
-    serializer = RoomSerializer(rooms, many=True)
-    return Response(serializer.data)
+    try:
+        rooms = Room.objects.filter(
+            deleted=False, property_id=property_id, is_available=True
+        )
+        if not rooms.exists():
+            raise NotFound("No available rooms for the given property.")
+
+        serializer = RoomSerializer(rooms, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({"error": str(e)}, status=400)
 
 
 @api_view(["POST"])
