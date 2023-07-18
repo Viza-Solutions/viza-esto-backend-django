@@ -30,3 +30,11 @@ class Tenant(models.Model):
     
     def __str__(self):
         return f"{self.fullname}"
+    
+
+    def save(self, *args, **kwargs):
+        # Convert the name to title case before saving
+        self.fullname = self.fullname.title()
+        self.alternative_names = self.alternative_names.title()
+        super(Property, self).save(*args, **kwargs)
+
