@@ -41,7 +41,7 @@ class Property(models.Model):
 
 class RoomType(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
     # client = models.ForeignKey(Client, on_delete=models.CASCADE)
     added_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
