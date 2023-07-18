@@ -65,7 +65,7 @@ def create_tenant(request):
         if existing_tenants.exists():
             raise serializers.ValidationError(
                 {
-                    "error": f"A tenant with the name '{tenant['fullname']}' already exists in the property."
+                    "error": f"A tenant with the name '{title_case_name}' already exists in the property."
                 }
             )
 
