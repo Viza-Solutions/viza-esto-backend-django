@@ -96,4 +96,4 @@ class Room(models.Model):
         unique_together = ["property", "room_number"]
 
     def __str__(self):
-        return f"{self.name} ({self.property.name})"
+        return f"{self.room_number} ({self.property.name})"
