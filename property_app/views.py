@@ -246,3 +246,30 @@ def delete_room_type(request, room_type_id):
     return Response(
         {"message": "Room type deleted successfully"}, status=status.HTTP_204_NO_CONTENT
     )
+
+
+
+
+
+
+
+
+# views.py
+import tablib
+from django.http import StreamingHttpResponse
+from rest_framework.views import APIView
+from .models import Property
+from .serializers import PropertySerializer
+
+class ExcelDownloadView(APIView):
+    def get(self, request):
+        queryset = Property.objects.all()
+        serializer = PropertySerializer(queryset, many=True)
+
+        data = tablib.Dataset(headers=list(serializer.data[0].keys()))
+        for item in serializer.data:
+            data.append(list(item.values()))
+
+        response = StreamingHttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="property_data.xlsx"'
+        return response

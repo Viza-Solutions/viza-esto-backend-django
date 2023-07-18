@@ -32,4 +32,7 @@ urlpatterns = [
     path('roomtypes/list', list_room_types, name='list-room-types'),
     path('available-rooms/<int:property_id>', property_available_room_list, name='available-rooms'),
 
+
+    path('download-excel/', ExcelDownloadView.as_view(), name='excel-download'),
+
 ]
