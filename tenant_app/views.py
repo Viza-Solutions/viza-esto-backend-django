@@ -134,8 +134,10 @@ def update_tenant(request, pk):
         if serializer.is_valid():
             updated_tenant = serializer.validated_data
 
+            title_case_name = updated_tenant.get("fullname").title()
+
             existing_tenants = Tenant.objects.filter(
-                fullname=updated_tenant.get("fullname"),
+                fullname=title_case_name,
                 property=tenant.property,
                 deleted=False,
             ).exclude(pk=pk)
@@ -143,7 +145,7 @@ def update_tenant(request, pk):
             if existing_tenants.exists():
                 raise serializers.ValidationError(
                     {
-                        "error": f"A tenant with the name '{updated_tenant.get('fullname')}' already exists in the property."
+                        "error": f"A tenant with the name '{title_case_name}' already exists in the property."
                     }
                 )
 
