@@ -30,4 +30,6 @@ urlpatterns = [
     path('roomtypes/update/<int:room_type_id>', update_room_type, name='update-room-type'),
     path('roomtypes/delete/<int:room_type_id>', delete_room_type, name='delete-room-type'),
     path('roomtypes/list', list_room_types, name='list-room-types'),
+    path('available-rooms/<int:property_id>', property_available_room_list, name='available-rooms'),
+
 ]

@@ -98,6 +98,15 @@ def property_room_list(request, property_id):
     return Response(serializer.data)
 
 
+@api_view(["GET"])
+def property_available_room_list(request, property_id):
+    rooms = Room.objects.filter(
+        deleted=False, property_id=property_id, is_available=True
+    )
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
+
+
 @api_view(["POST"])
 def create_room(request):
     request.data["added_by"] = request.user.id
