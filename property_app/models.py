@@ -35,7 +35,7 @@ class Property(models.Model):
     def save(self, *args, **kwargs):
         # Convert the name to title case before saving
         self.name = self.name.title()
-        super(Property, self).save(*args, **kwargs)
+        super(Property, self).save(*args, **kwargs) 
 
 
 

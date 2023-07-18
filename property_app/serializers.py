@@ -19,7 +19,6 @@ class PropertySerializer(serializers.ModelSerializer):
         return super().to_internal_value(data)
 
 
-
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
