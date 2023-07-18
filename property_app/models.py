@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db import models
 from django.conf import settings
 
+
 class Property(models.Model):
     STATUS_CHOICES = (
         ("Active", "Active"),
@@ -35,8 +36,19 @@ class Property(models.Model):
     def save(self, *args, **kwargs):
         # Convert the name to title case before saving
         self.name = self.name.title()
-        super(Property, self).save(*args, **kwargs) 
+        super(Property, self).save(*args, **kwargs)
 
+
+class RoomType(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    added_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
+    )
+
+    def __str__(self):
+        return self.name
 
 
 class Room(models.Model):

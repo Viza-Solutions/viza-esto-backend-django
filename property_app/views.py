@@ -149,10 +149,84 @@ def delete_room(request, pk):
         return Response({"message": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-
 # delete-all
+
 
 @api_view(["DELETE"])
 def delete_all_rooms(request):
     Room.objects.all().delete()
-    return Response({"message": "All rooms deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    return Response(
+        {"message": "All rooms deleted successfully"}, status=status.HTTP_204_NO_CONTENT
+    )
+
+
+# ROOM TPER?
+# Create RoomType
+@api_view(["POST"])
+def create_room_type(request):
+    serializer = RoomTypeSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(added_by=request.user)
+        return Response(
+            {"message": "Room type created successfully", "data": serializer.data},
+            status=status.HTTP_201_CREATED,
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Read (List) RoomTypes
+@api_view(["GET"])
+def list_room_types(request):
+    room_types = RoomType.objects.all()
+    serializer = RoomTypeSerializer(room_types, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# Read (Retrieve) RoomType
+@api_view(["GET"])
+def retrieve_room_type(request, room_type_id):
+    try:
+        room_type = RoomType.objects.get(pk=room_type_id)
+    except RoomType.DoesNotExist:
+        return Response(
+            {"message": "Room type not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
+    serializer = RoomTypeSerializer(room_type)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# Update RoomType
+@api_view(["PUT"])
+def update_room_type(request, room_type_id):
+    try:
+        room_type = RoomType.objects.get(pk=room_type_id)
+    except RoomType.DoesNotExist:
+        return Response(
+            {"message": "Room type not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
+    serializer = RoomTypeSerializer(room_type, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {"message": "Room type updated successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Delete RoomType
+@api_view(["DELETE"])
+def delete_room_type(request, room_type_id):
+    try:
+        room_type = RoomType.objects.get(pk=room_type_id)
+    except RoomType.DoesNotExist:
+        return Response(
+            {"message": "Room type not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
+    room_type.delete()
+    return Response(
+        {"message": "Room type deleted successfully"}, status=status.HTTP_204_NO_CONTENT
+    )

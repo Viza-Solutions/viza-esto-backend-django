@@ -23,5 +23,11 @@ urlpatterns = [
 
     path('rooms/delete-all', delete_all_rooms, name='delete-all-rooms'),
 
+    # RoomTypes CRUD URLs
 
+    path('  ', create_room_type, name='create-room-type'),
+    path('roomtypes/<int:room_type_id>', retrieve_room_type, name='retrieve-room-type'),
+    path('roomtypes/update/<int:room_type_id>', update_room_type, name='update-room-type'),
+    path('roomtypes/delete/<int:room_type_id>', delete_room_type, name='delete-room-type'),
+    path('roomtypes/list', list_room_types, name='list-room-types'),
 ]
