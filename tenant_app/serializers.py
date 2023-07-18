@@ -13,6 +13,11 @@ class TenantRoomTransferSerializer(serializers.ModelSerializer):
         model = Tenant
         fields = ["room"]
 
+        def to_internal_value(self, data):
+            # Convert the 'name' field to title case
+            data["fullname"] = data.get("fullname", "").title()
+            return super().to_internal_value(data)
+
 
 class TenantUpdateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +31,9 @@ class TenantUpdateSerializer(serializers.ModelSerializer):
             "deposit_amount_paid",
             "status",
         ]
+
+        def to_internal_value(self, data):
+            # Convert the 'name' field to title case
+            data["fullname"] = data.get("fullname", "").title()
+            return super().to_internal_value(data)
+
