@@ -133,7 +133,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def token(self):
-        bearer = jwt.encode(
+        token = jwt.encode(
             {
                 "username": self.username,
                 "email": self.email,
@@ -143,4 +143,4 @@ class User(AbstractBaseUser, PermissionsMixin):
             algorithm="HS256",
         )
 
-        return bearer
+        return token
