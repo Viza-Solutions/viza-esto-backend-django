@@ -76,7 +76,7 @@ class Room(models.Model):
     floor = models.CharField(max_length=50, blank=True, null=True)
     is_available = models.BooleanField(default=True)
     description = models.TextField(blank=True, null=True)
-    room_type = models.CharField(max_length=50, choices=ROOM_TYPE_CHOICES)
+    room_type = models.ForeignKey(RoomType, on_delete=models.SET_NULL, null=True)
     bedrooms = models.PositiveIntegerField(null=True, blank=True)
     bathrooms = models.PositiveIntegerField(null=True, blank=True)
     size = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
