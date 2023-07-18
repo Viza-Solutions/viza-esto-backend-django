@@ -22,13 +22,21 @@ def client_property_list(request, client_id):
 @api_view(["POST"])
 def create_property(request):
     serializer = PropertySerializer(data=request.data)
-    if serializer.is_valid():
+    try:
+        serializer.is_valid(raise_exception=True)
         serializer.save(added_by=request.user)
         return Response(
             {"message": "Property created successfully", "data": serializer.data},
             status=status.HTTP_201_CREATED,
         )
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except serializers.ValidationError as e:
+        # Check if the error is due to uniqueness constraint violation
+        if "name" in e.detail and "unique" in e.detail["name"][0].lower():
+            error_message = {"name": ["A property with this name already exists."]}
+        else:
+            error_message = e.detail
+
+        return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
@@ -149,10 +157,12 @@ def delete_room(request, pk):
         return Response({"message": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-
 # delete-all
+
 
 @api_view(["DELETE"])
 def delete_all_rooms(request):
     Room.objects.all().delete()
-    return Response({"message": "All rooms deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    return Response(
+        {"message": "All rooms deleted successfully"}, status=status.HTTP_204_NO_CONTENT
+    )
