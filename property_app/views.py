@@ -110,8 +110,17 @@ def property_available_room_list(request, property_id):
 
         serializer = RoomSerializer(rooms, many=True)
         return Response(serializer.data)
-    except Exception as e: 
+    except Exception as e:
         return Response({"error": str(e)}, status=400)
+
+
+@api_view(["DELETE"])
+def delete_all_properties(request):
+    Property.objects.all().delete()
+    return Response(
+        {"message": "All properties deleted successfully"},
+        status=status.HTTP_204_NO_CONTENT,
+    )
 
 
 @api_view(["POST"])
@@ -246,5 +255,3 @@ def delete_room_type(request, room_type_id):
     return Response(
         {"message": "Room type deleted successfully"}, status=status.HTTP_204_NO_CONTENT
     )
-
-

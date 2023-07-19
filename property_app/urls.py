@@ -32,4 +32,7 @@ urlpatterns = [
     path('roomtypes/list', list_room_types, name='list-room-types'),
     path('available-rooms/<int:property_id>', property_available_room_list, name='available-rooms'),
 
+    path('delete-all-properties', delete_all_properties, name='delete-all-properties'),
+
+
 ]
