@@ -164,7 +164,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    'https://viza-esto.vercel.app/'
+    'https://viza-esto.vercel.app'
 ]
 
 CORS_ALLOW_METHODS = [
