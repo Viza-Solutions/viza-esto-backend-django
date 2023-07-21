@@ -16,7 +16,6 @@ from datetime import datetime, timedelta
 from client_app.models import *
 
 
-
 # hello this is Zacky project
 class MyUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_fields):
@@ -116,8 +115,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("user status"), max_length=15, choices=STATUS_CHOICES, blank=False
     )
 
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    property = models.CharField(_("property"), max_length=15, blank=True, null=True)
 
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
     # created at
     created_at = models.DateTimeField(_("created at"), default=timezone.now)
