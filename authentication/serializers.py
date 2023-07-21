@@ -30,7 +30,7 @@ class LoginSerializer(serializers.ModelSerializer):
             "first_name",
             "token",
             "client",
-            "property",
+            "propertyy",
         ]
         read_only_fields = [
             "id",
@@ -42,7 +42,7 @@ class LoginSerializer(serializers.ModelSerializer):
             "token",
             "username",
             "client",
-            "property",
+            "propertyy",
         ]
 
 

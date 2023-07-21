@@ -115,7 +115,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("user status"), max_length=15, choices=STATUS_CHOICES, blank=False
     )
 
-    property = models.CharField(_("property"), max_length=15, blank=True, null=True)
+    propertyy = models.CharField(max_length=50, blank=True, null=True)
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
