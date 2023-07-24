@@ -39,4 +39,6 @@ urlpatterns = [
         delete_all_payment_transactions,
         name="delete-all-payment-transactions",
     ),
+    # reports
+    path("excel-report/<int:tenant_id>", excel_report_view, name="excel_report"),
 ]

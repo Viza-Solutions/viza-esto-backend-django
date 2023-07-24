@@ -180,3 +180,87 @@ def delete_all_payment_transactions(request):
         {"message": "All payment transactions deleted successfully"},
         status=status.HTTP_204_NO_CONTENT,
     )
+
+
+
+# reports
+
+# views.py
+import openpyxl
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import PaymentTransaction
+from openpyxl.chart import BarChart, Reference
+
+
+@api_view(["GET"])
+def excel_report_view(request, tenant_id):
+    # Retrieve the data from the PaymentTransaction model for the specific Tenant
+    queryset = PaymentTransaction.objects.filter(tenant_id=tenant_id)
+
+    # Create a new workbook and add a worksheet
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+    worksheet.title = f"Payment Transactions Report - Tenant {tenant_id}"
+
+    # Write the header row with bold font, centered alignment, and font color
+    header_font = openpyxl.styles.Font(bold=True)
+    header_alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center")
+
+    headers = [
+        "ID",
+        "Amount",
+        "Balance",
+        "Month",
+        "Year",
+        "Payment Method",
+        "Reference",
+        "Description",
+        "Processed By",
+        "Client",
+        "Reversed",
+        "UUID",
+        "Created At",
+        "Updated At",
+    ]
+    for col_num, header in enumerate(headers, start=1):
+        cell = worksheet.cell(row=1, column=col_num)
+        cell.value = header.upper()  # Capitalize the header
+        cell.font = header_font
+        cell.alignment = header_alignment
+
+    # Write data rows
+    data_alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center")
+    for row_num, transaction in enumerate(queryset, start=2):
+        data = [
+            transaction.id,
+            transaction.amount,
+            transaction.balance,
+            transaction.month,
+            transaction.year,
+            str(transaction.payment_method),
+            transaction.reference,
+            transaction.description,
+            str(transaction.processed_by),
+            str(transaction.client),
+            transaction.reversed,
+            str(transaction.uuid),
+            transaction.created_at,
+            transaction.updated_at,
+        ]
+        for col_num, value in enumerate(data, start=1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = value
+            cell.alignment = data_alignment
+
+    # Auto-fit column width for all columns
+    for col_num, header in enumerate(headers, start=1):
+        column_letter = openpyxl.utils.get_column_letter(col_num)
+        worksheet.column_dimensions[column_letter].auto_size = True
+
+    # Create a response with the Excel file
+    response = Response(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response["Content-Disposition"] = f"attachment; filename=tenant_{tenant_id}_report.xlsx"
+    workbook.save(response)
+
+    return response
