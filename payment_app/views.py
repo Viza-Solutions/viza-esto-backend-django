@@ -186,14 +186,18 @@ def delete_all_payment_transactions(request):
 # reports
 
 # views.py
+# views.py
 import openpyxl
+from django.http import HttpResponse
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from .models import PaymentTransaction
 from openpyxl.chart import BarChart, Reference
+from rest_framework.decorators import authentication_classes, permission_classes
 
 
 @api_view(["GET"])
+@authentication_classes([])
+@permission_classes([])
 def excel_report_view(request, tenant_id):
     # Retrieve the data from the PaymentTransaction model for the specific Tenant
     queryset = PaymentTransaction.objects.filter(tenant_id=tenant_id)
@@ -259,7 +263,9 @@ def excel_report_view(request, tenant_id):
         worksheet.column_dimensions[column_letter].auto_size = True
 
     # Create a response with the Excel file
-    response = Response(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
     response["Content-Disposition"] = f"attachment; filename=tenant_{tenant_id}_report.xlsx"
     workbook.save(response)
 
