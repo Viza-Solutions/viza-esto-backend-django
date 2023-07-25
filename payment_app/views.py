@@ -407,7 +407,7 @@ def pdf_report_view(request, tenant_id):
         # Create the table and add data
         data = [
             [
-                "ID",
+                "Transaction No.",
                 "Amount",
                 "Balance",
                 "Month",
