@@ -481,7 +481,7 @@ def pdf_report_view(request, tenant_id):
         title_paragraph = Paragraph("KEIGHT-ESTO", header_style)
 
         additional_info = Paragraph(
-            "PO Box 123<br/>"
+            "PO Box 21,<br/>"
             "Nairobi, Kenya<br/>"
             "Tel: +254 58 033088<br/>"
             "Email: info@keights.com<br/>",
