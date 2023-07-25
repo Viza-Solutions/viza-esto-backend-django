@@ -44,7 +44,6 @@ urlpatterns = [
     path('pdf_report/<int:tenant_id>', pdf_report_view, name='pdf_report_view'),
 
 
-
     # get trasactions
     path('tenant-transactions/<int:tenant_id>', get_transactions_for_tenant, name='get_transactions_for_tenant'),
 
