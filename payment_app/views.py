@@ -288,18 +288,18 @@ def excel_report_view(request, tenant_id):
         curr_balance = (-months_difference * monthly_price) + balance
 
         # Write unpaid and prepaid months information at the end of the sheet
-        unpaid_cell = worksheet.cell(row=len(queryset) + 2, column=1, value="Unpaid Months")
+        unpaid_cell = worksheet.cell(row=len(queryset) + 5, column=1, value="Unpaid Months")
         unpaid_cell.font = openpyxl.styles.Font(bold=True)
         unpaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
 
-        unpaid_value_cell = worksheet.cell(row=len(queryset) + 2, column=2, value=curr_balance)
+        unpaid_value_cell = worksheet.cell(row=len(queryset) + 5, column=2, value=curr_balance)
         unpaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
 
-        prepaid_cell = worksheet.cell(row=len(queryset) + 3, column=1, value="Prepaid Months")
+        prepaid_cell = worksheet.cell(row=len(queryset) + 6, column=1, value="Prepaid Months")
         prepaid_cell.font = openpyxl.styles.Font(bold=True)
         prepaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
 
-        prepaid_value_cell = worksheet.cell(row=len(queryset) + 3, column=2, value=curr_balance)
+        prepaid_value_cell = worksheet.cell(row=len(queryset) + 6, column=2, value=curr_balance)
         prepaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
 
         # Auto-fit column width for all columns
