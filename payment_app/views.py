@@ -576,7 +576,7 @@ def pdf_report_view(request, tenant_id):
         )
 
         balance_info = Paragraph(
-            "<br/>" "<br/>" "Balance : Ksh. " + str(curr_balance_str) + "/=",
+            "<br/>" "<br/>" "Balance : Ksh. " + str(curr_balance_str),
             bal_style,
         )
         doc.topMargin = 70  # Adjust the top margin to make space for the header
