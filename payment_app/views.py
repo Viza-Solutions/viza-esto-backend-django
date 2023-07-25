@@ -562,9 +562,9 @@ def pdf_report_view(request, tenant_id):
         curr_balance = (-months_difference * monthly_price) + balance
 
         if curr_balance > 0:
-            curr_balance_str = "Prepaid Amount " + str(curr_balance) + "/="
+            curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
         else:
-            curr_balance_str = "Underpaid Amount " + str(curr_balance) + "/="
+            curr_balance_str = "Underpaid Amount Ksh. " + str(curr_balance) + "/="
 
         tenant_info = Paragraph(
             "<br/>"
@@ -576,7 +576,7 @@ def pdf_report_view(request, tenant_id):
         )
 
         balance_info = Paragraph(
-            "<br/>" "<br/>" "Balance : Ksh. " + str(curr_balance_str),
+            "<br/>" "<br/>" " " + str(curr_balance_str),
             bal_style,
         )
         doc.topMargin = 70  # Adjust the top margin to make space for the header
