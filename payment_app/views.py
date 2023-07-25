@@ -279,7 +279,7 @@ def excel_report_view(request, tenant_id):
         except Room.DoesNotExist:
             # Handle the case when no room is found for the given tenant_id
             room_id = None
-            monthly_price = None
+            monthly_price = 3
 
         # Calculate the curr_balance
         months_difference = ((current_year - year) * 12) + (current_month - month)
