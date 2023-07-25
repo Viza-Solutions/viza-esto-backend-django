@@ -478,7 +478,7 @@ def pdf_report_view(request, tenant_id):
         )
 
         # Add the heading to the top of the page with more information
-        title_paragraph = Paragraph("KEIGHT-ESTO", header_style)
+        title_paragraph = Paragraph("KEIGHT", header_style)
 
         additional_info = Paragraph(
             "PO Box 21,<br/>"
