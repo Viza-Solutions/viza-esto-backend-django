@@ -1,15 +1,20 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
 from .models import *
 from .serializers import *
 from django.db import IntegrityError
-
 from datetime import datetime
 from uuid import uuid4
-
-import pytz
+from io import BytesIO
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from django.http import HttpResponse, JsonResponse
+from .models import PaymentTransaction
+from datetime import datetime
+import openpyxl
 
 
 # Views
@@ -186,19 +191,8 @@ def delete_all_payment_transactions(request):
 
 # reports
 
-import openpyxl
-from django.http import HttpResponse, JsonResponse
-from rest_framework.decorators import (
-    api_view,
-    authentication_classes,
-    permission_classes,
-)
-from .models import PaymentTransaction
-
 
 @api_view(["GET"])
-@authentication_classes([])
-@permission_classes([])
 def excel_report_view(request, tenant_id):
     try:
         # Retrieve the data from the PaymentTransaction model for the specific Tenant
@@ -358,24 +352,7 @@ def excel_report_view(request, tenant_id):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-from io import BytesIO
-from reportlab.lib.pagesizes import letter, landscape
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from django.http import HttpResponse, JsonResponse
-from rest_framework.decorators import (
-    api_view,
-    authentication_classes,
-    permission_classes,
-)
-from .models import PaymentTransaction
-from datetime import datetime
-
-
 @api_view(["GET"])
-@authentication_classes([])
-@permission_classes([])
 def pdf_report_view(request, tenant_id):
     try:
         # Retrieve the data from the PaymentTransaction model for the specific Tenant
@@ -602,3 +579,24 @@ def pdf_report_view(request, tenant_id):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+
+
+# get all tenants transactions
+
+@api_view(['GET'])
+def get_transactions_for_tenant(request, tenant_id):
+    try:
+        # Retrieve all transactions for the specific tenant where reversed=False
+        transactions = PaymentTransaction.objects.filter(tenant_id=tenant_id, reversed=False)
+
+        # Serialize the transactions
+        serializer = PaymentTransactionSerializer(transactions, many=True)
+
+        return Response(serializer.data)
+
+    except PaymentTransaction.DoesNotExist:
+        return Response({"error": "No transactions found for the given tenant_id."}, status=404)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
