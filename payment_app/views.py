@@ -189,129 +189,130 @@ def delete_all_payment_transactions(request):
 # views.py
 from datetime import date
 import openpyxl
-from django.http import HttpResponse
-from rest_framework.decorators import api_view
+from django.http import HttpResponse, JsonResponse
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .models import PaymentTransaction
 from openpyxl.chart import BarChart, Reference
-from rest_framework.decorators import authentication_classes, permission_classes
 
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([])
 def excel_report_view(request, tenant_id):
-    # Retrieve the data from the PaymentTransaction model for the specific Tenant
-    queryset = PaymentTransaction.objects.filter(tenant_id=tenant_id)
-
-    # Create a new workbook and add a worksheet
-    workbook = openpyxl.Workbook()
-    worksheet = workbook.active
-    worksheet.title = f"Payment Transactions Report - Tenant {tenant_id}"
-
-    # Write the header row with bold font, centered alignment, and font color
-    header_font = openpyxl.styles.Font(bold=True)
-    header_alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center")
-
-    headers = [
-        "ID",
-        "Amount",
-        "Balance",
-        "Month",
-        "Year",
-        "Payment Method",
-        "Reference",
-        "Description",
-        "Processed By",
-        "Client",
-        "Created At",
-    ]
-    for col_num, header in enumerate(headers, start=1):
-        cell = worksheet.cell(row=1, column=col_num)
-        cell.value = header.upper()  # Capitalize the header
-        cell.font = header_font
-        cell.alignment = header_alignment
-
-    # Write data rows
-    data_alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center")
-    for row_num, transaction in enumerate(queryset, start=2):
-        data = [
-            transaction.id,
-            transaction.amount,
-            transaction.balance,
-            transaction.month,
-            transaction.year,
-            str(transaction.payment_method),
-            transaction.reference,
-            transaction.description,
-            str(transaction.processed_by),
-            str(transaction.client),
-            transaction.created_at,
-        ]
-        for col_num, value in enumerate(data, start=1):
-            cell = worksheet.cell(row=row_num, column=col_num)
-            cell.value = value
-            cell.alignment = data_alignment
-
-    # Calculate unpaid and prepaid months
-
-    last_transaction = PaymentTransaction.objects.filter(tenant_id=tenant_id).order_by('-transaction_date').first()
-
-
-    balance = last_transaction.balance
-    year = last_transaction.year
-    month = last_transaction.month
-
-
-    # Get the current date and time
-    current_datetime = datetime.now()
-
-    # Get the current month and year
-    current_month = current_datetime.month
-    current_year = current_datetime.year
-
-
     try:
-        # Find the room with the given tenant_id
-        tenant_details = Room.objects.get(pk=tenant_id)
-        room_id = tenant_details.room_id
+        # Retrieve the data from the PaymentTransaction model for the specific Tenant
+        queryset = PaymentTransaction.objects.filter(tenant_id=tenant_id)
 
-        # Get the room object using the retrieved room_id
-        room = Room.objects.get(pk=room_id)
-        monthly_price = room.monthly_price
+        if not queryset.exists():
+            return JsonResponse({"error": "No transactions found for the given tenant_id."}, status=404)
 
-    except Room.DoesNotExist:
-        # Handle the case when no room is found for the given tenant_id
-        room_id = None
-        monthly_price = None
+        # Create the Excel file
+        workbook = openpyxl.Workbook()
+        worksheet = workbook.active
+        worksheet.title = f"Payment Transactions Report - Tenant {tenant_id}"
+
+        # Write the header row with bold font, centered alignment, and font color
+        header_font = openpyxl.styles.Font(bold=True)
+        header_alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center")
+
+        headers = [
+            "ID",
+            "Amount",
+            "Balance",
+            "Month",
+            "Year",
+            "Payment Method",
+            "Reference",
+            "Description",
+            "Processed By",
+            "Client",
+            "Created At",
+        ]
+        for col_num, header in enumerate(headers, start=1):
+            cell = worksheet.cell(row=1, column=col_num)
+            cell.value = header.upper()  # Capitalize the header
+            cell.font = header_font
+            cell.alignment = header_alignment
+
+        # Write data rows
+        data_alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center")
+        for row_num, transaction in enumerate(queryset, start=2):
+            data = [
+                transaction.id,
+                transaction.amount,
+                transaction.balance,
+                transaction.month,
+                transaction.year,
+                str(transaction.payment_method),
+                transaction.reference,
+                transaction.description,
+                str(transaction.processed_by),
+                str(transaction.client),
+                transaction.created_at,
+            ]
+            for col_num, value in enumerate(data, start=1):
+                cell = worksheet.cell(row=row_num, column=col_num)
+                cell.value = value
+                cell.alignment = data_alignment
+
+        # Get the current date and time
+        current_datetime = datetime.now()
+
+        # Get the current month and year
+        current_month = current_datetime.month
+        current_year = current_datetime.year
+
+        # Calculate unpaid and prepaid months
+        last_transaction = queryset.order_by('-id').first()
+        balance = last_transaction.balance
+        year = last_transaction.year
+        month = last_transaction.month
+
+        try:
+            # Find the room with the given tenant_id
+            tenant_details = Room.objects.get(pk=tenant_id)
+            room_id = tenant_details.room_id
+
+            # Get the room object using the retrieved room_id
+            room = Room.objects.get(pk=room_id)
+            monthly_price = room.monthly_price
+
+        except Room.DoesNotExist:
+            # Handle the case when no room is found for the given tenant_id
+            room_id = None
+            monthly_price = None
 
         # Calculate the curr_balance
-    months_difference = ((current_year - year) * 12) + (current_month - month)
-    curr_balance = (-months_difference * monthly_price) + balance
+        months_difference = ((current_year - year) * 12) + (current_month - month)
+        curr_balance = (-months_difference * monthly_price) + balance
 
-    # Write unpaid and prepaid months information at the end of the sheet
-    unpaid_cell = worksheet.cell(row=len(queryset) + 2, column=1, value="Unpaid Months")
-    unpaid_cell.font = openpyxl.styles.Font(bold=True)
-    unpaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
+        # Write unpaid and prepaid months information at the end of the sheet
+        unpaid_cell = worksheet.cell(row=len(queryset) + 2, column=1, value="Unpaid Months")
+        unpaid_cell.font = openpyxl.styles.Font(bold=True)
+        unpaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
 
-    unpaid_value_cell = worksheet.cell(row=len(queryset) + 2, column=2, value=curr_balance)
-    unpaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
+        unpaid_value_cell = worksheet.cell(row=len(queryset) + 2, column=2, value=curr_balance)
+        unpaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
 
-    prepaid_cell = worksheet.cell(row=len(queryset) + 3, column=1, value="Prepaid Months")
-    prepaid_cell.font = openpyxl.styles.Font(bold=True)
-    prepaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
+        prepaid_cell = worksheet.cell(row=len(queryset) + 3, column=1, value="Prepaid Months")
+        prepaid_cell.font = openpyxl.styles.Font(bold=True)
+        prepaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
 
-    prepaid_value_cell = worksheet.cell(row=len(queryset) + 3, column=2, value=curr_balance)
-    prepaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
+        prepaid_value_cell = worksheet.cell(row=len(queryset) + 3, column=2, value=curr_balance)
+        prepaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
 
-    # Auto-fit column width for all columns
-    for col_num, header in enumerate(headers, start=1):
-        column_letter = openpyxl.utils.get_column_letter(col_num)
-        worksheet.column_dimensions[column_letter].auto_size = True
+        # Auto-fit column width for all columns
+        for col_num, header in enumerate(headers, start=1):
+            column_letter = openpyxl.utils.get_column_letter(col_num)
+            worksheet.column_dimensions[column_letter].auto_size = True
 
-    # Create a response with the Excel file
-    response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-    response["Content-Disposition"] = f"attachment; filename=tenant_{tenant_id}_report.xlsx"
-    workbook.save(response)
+        # Create a response with the Excel file
+        response = HttpResponse(
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        response["Content-Disposition"] = f"attachment; filename=tenant_{tenant_id}_report.xlsx"
+        workbook.save(response)
 
-    return response
+        return response
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
