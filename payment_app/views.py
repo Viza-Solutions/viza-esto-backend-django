@@ -9,6 +9,8 @@ from django.db import IntegrityError
 from datetime import datetime
 from uuid import uuid4
 
+import pytz
+
 
 # Views
 @api_view(["GET"])
@@ -301,26 +303,34 @@ def excel_report_view(request, tenant_id):
 
         curr_balance = (-months_difference * monthly_price) + balance
 
+        over_payment = 0
+        under_payment = 0
+
+        if curr_balance > 0:
+            over_payment = curr_balance
+        else:
+            under_payment = curr_balance
+
         # Write unpaid and prepaid months information at the end of the sheet
         unpaid_cell = worksheet.cell(
-            row=len(queryset) + 5, column=1, value="Unpaid Months"
+            row=len(queryset) + 5, column=1, value="Unpaid Amount"
         )
         unpaid_cell.font = openpyxl.styles.Font(bold=True)
         unpaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
 
         unpaid_value_cell = worksheet.cell(
-            row=len(queryset) + 5, column=2, value=curr_balance
+            row=len(queryset) + 5, column=2, value=under_payment
         )
         unpaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
 
         prepaid_cell = worksheet.cell(
-            row=len(queryset) + 6, column=1, value="Prepaid Months"
+            row=len(queryset) + 6, column=1, value="Prepaid Amount"
         )
         prepaid_cell.font = openpyxl.styles.Font(bold=True)
         prepaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
 
         prepaid_value_cell = worksheet.cell(
-            row=len(queryset) + 6, column=2, value=curr_balance
+            row=len(queryset) + 6, column=2, value=over_payment
         )
         prepaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
 
@@ -333,9 +343,17 @@ def excel_report_view(request, tenant_id):
         response = HttpResponse(
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
-        response[
-            "Content-Disposition"
-        ] = f"attachment; filename={name} Rent Report.xlsx"
+
+        current_datetime = datetime.now()
+
+        # Generate the timestamp in the Nairobi timezone
+        timestamp = current_datetime.strftime("%Y%m%d_%H%M%S")
+
+        # Append the timestamp to the filename
+        filename = f"{name}_Rent_Report_{timestamp}.xlsx"
+
+        # Set the Content-Disposition header with the updated filename
+        response["Content-Disposition"] = f"attachment; filename={filename}"
         workbook.save(response)
 
         return response

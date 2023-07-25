@@ -67,6 +67,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "backend.urls"
 
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -132,11 +133,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Africa/Nairobi'
+
+# TIME_ZONE = "UTC"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -164,9 +167,9 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    'https://viza-esto.vercel.app',
-    'https://viza-esto-zac-mwangi.vercel.app',
-    'https://viza-esto.onrender.com'
+    "https://viza-esto.vercel.app",
+    "https://viza-esto-zac-mwangi.vercel.app",
+    "https://viza-esto.onrender.com",
 ]
 
 CORS_ALLOW_METHODS = [
