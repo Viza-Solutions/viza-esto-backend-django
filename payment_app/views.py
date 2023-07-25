@@ -281,6 +281,8 @@ def excel_report_view(request, tenant_id):
             room_id = None
             monthly_price = 3
 
+        print(monthly_price)
+
         # Calculate the curr_balance
         months_difference = ((current_year - year) * 12) + (current_month - month)
         curr_balance = (-months_difference * monthly_price) + balance
