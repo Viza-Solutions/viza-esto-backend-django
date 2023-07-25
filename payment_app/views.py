@@ -588,7 +588,7 @@ def pdf_report_view(request, tenant_id):
 def get_transactions_for_tenant(request, tenant_id):
     try:
         # Retrieve all transactions for the specific tenant where reversed=False
-        transactions = PaymentTransaction.objects.filter(tenant_id=tenant_id, reversed=False)
+        transactions = PaymentTransaction.objects.filter(tenant_id=tenant_id, reversed=False).order_by('-id')
 
         # Serialize the transactions
         serializer = PaymentTransactionSerializer(transactions, many=True)
