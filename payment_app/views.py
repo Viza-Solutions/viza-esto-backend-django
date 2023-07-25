@@ -20,14 +20,16 @@ import openpyxl
 # Views
 @api_view(["GET"])
 def payment_method_list(request):
-    payment_methods = PaymentMethod.objects.filter(deleted=False).order_by('name')
+    payment_methods = PaymentMethod.objects.filter(deleted=False).order_by("name")
     serializer = PaymentMethodSerializer(payment_methods, many=True)
     return Response(serializer.data)
 
 
 @api_view(["GET"])
 def client_payment_method_list(request, client_id):
-    payment_methods = PaymentMethod.objects.filter(deleted=False, client_id=client_id).order_by('name')
+    payment_methods = PaymentMethod.objects.filter(
+        deleted=False, client_id=client_id
+    ).order_by("name")
     serializer = PaymentMethodSerializer(payment_methods, many=True)
     return Response(serializer.data)
 
@@ -581,14 +583,16 @@ def pdf_report_view(request, tenant_id):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-
 # get all tenants transactions
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 def get_transactions_for_tenant(request, tenant_id):
     try:
         # Retrieve all transactions for the specific tenant where reversed=False
-        transactions = PaymentTransaction.objects.filter(tenant_id=tenant_id, reversed=False).order_by('-id')
+        transactions = PaymentTransaction.objects.filter(
+            tenant_id=tenant_id, reversed=False
+        ).order_by("-id")
 
         # Serialize the transactions
         serializer = PaymentTransactionSerializer(transactions, many=True)
@@ -596,7 +600,9 @@ def get_transactions_for_tenant(request, tenant_id):
         return Response(serializer.data)
 
     except PaymentTransaction.DoesNotExist:
-        return Response({"error": "No transactions found for the given tenant_id."}, status=404)
+        return Response(
+            {"error": "No transactions found for the given tenant_id."}, status=404
+        )
 
     except Exception as e:
         return Response({"error": str(e)}, status=500)
