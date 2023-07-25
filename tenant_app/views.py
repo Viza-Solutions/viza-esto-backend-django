@@ -3,13 +3,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Tenant
 from property_app.models import Property, Room
+from payment_app.models import *
 from .serializers import *
 from rest_framework import serializers
+
+from datetime import datetime
 
 
 @api_view(["GET"])
 def tenant_list(request):
-    tenants = Tenant.objects.filter(deleted=False).order_by('fullname')
+    tenants = Tenant.objects.filter(deleted=False).order_by("fullname")
     serializer = TenantSerializer(tenants, many=True)
     return Response(serializer.data)
 
@@ -17,7 +20,9 @@ def tenant_list(request):
 # Get all tenants for a specific client
 @api_view(["GET"])
 def client_tenant_list(request, client_id):
-    tenants = Tenant.objects.filter(deleted=False, client_id=client_id).order_by('fullname')
+    tenants = Tenant.objects.filter(deleted=False, client_id=client_id).order_by(
+        "fullname"
+    )
     serializer = TenantSerializer(tenants, many=True)
     return Response(serializer.data)
 
@@ -25,7 +30,9 @@ def client_tenant_list(request, client_id):
 # Get all tenants for a specific property
 @api_view(["GET"])
 def property_tenant_list(request, property_id):
-    tenants = Tenant.objects.filter(deleted=False, property_id=property_id).order_by('fullname')
+    tenants = Tenant.objects.filter(deleted=False, property_id=property_id).order_by(
+        "fullname"
+    )
     serializer = TenantSerializer(tenants, many=True)
     return Response(serializer.data)
 
@@ -119,7 +126,54 @@ def retrieve_tenant(request, pk):
     try:
         tenant = Tenant.objects.get(pk=pk, deleted=False)
         serializer = TenantSerializer(tenant)
-        return Response(serializer.data)
+
+        current_datetime = datetime.now()
+
+        # Get the current month and year
+        current_month = int(current_datetime.month)
+        current_year = int(current_datetime.year)
+
+        queryset = PaymentTransaction.objects.filter(tenant_id=pk, reversed=False)
+        # Calculate unpaid and prepaid months
+        last_transaction = queryset.order_by("-id").first()
+        balance = int(last_transaction.balance)
+        year = int(last_transaction.year)
+        month = int(last_transaction.month)
+
+        try:
+            tenant_details = Tenant.objects.get(pk=pk)
+            room_id = tenant_details.room_id
+            name = (
+                tenant_details.fullname
+            )  # Set the 'name' variable with the tenant's name
+
+            # Get the room object using the retrieved room_id
+            room = Room.objects.get(pk=room_id)
+            room_number = room.room_number
+            estate = str(room.property)
+            monthly_price = int(room.monthly_price)
+
+        except Tenant.DoesNotExist:
+            # Handle the case when no tenant is found for the given tenant_id
+            room_id = None
+            monthly_price = None
+            name = "Undefined"
+
+        # Calculate the curr_balance
+        months_difference = ((current_year - year) * 12) + (current_month - month)
+
+        curr_balance = (-months_difference * monthly_price) + balance
+
+        if curr_balance > 0:
+            curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
+            typee = "Prepaid"
+        else:
+            curr_balance_str = "Underpaid Amount Ksh. " + str(curr_balance) + "/="
+            typee = "Underpaid"
+
+        return Response(
+            {"data": serializer.data, "type": typee, "amount": curr_balance}
+        )
     except Tenant.DoesNotExist:
         return Response(
             {"message": "Tenant not found"}, status=status.HTTP_404_NOT_FOUND
