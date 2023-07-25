@@ -20,14 +20,14 @@ import openpyxl
 # Views
 @api_view(["GET"])
 def payment_method_list(request):
-    payment_methods = PaymentMethod.objects.filter(deleted=False)
+    payment_methods = PaymentMethod.objects.filter(deleted=False).order_by('name')
     serializer = PaymentMethodSerializer(payment_methods, many=True)
     return Response(serializer.data)
 
 
 @api_view(["GET"])
 def client_payment_method_list(request, client_id):
-    payment_methods = PaymentMethod.objects.filter(deleted=False, client_id=client_id)
+    payment_methods = PaymentMethod.objects.filter(deleted=False, client_id=client_id).order_by('name')
     serializer = PaymentMethodSerializer(payment_methods, many=True)
     return Response(serializer.data)
 
