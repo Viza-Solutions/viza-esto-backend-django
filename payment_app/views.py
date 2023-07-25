@@ -186,9 +186,6 @@ def delete_all_payment_transactions(request):
 
 # reports
 
-# views.py
-# views.py
-from datetime import date
 import openpyxl
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import (
@@ -197,7 +194,6 @@ from rest_framework.decorators import (
     permission_classes,
 )
 from .models import PaymentTransaction
-from openpyxl.chart import BarChart, Reference
 
 
 @api_view(["GET"])
@@ -355,6 +351,223 @@ def excel_report_view(request, tenant_id):
         # Set the Content-Disposition header with the updated filename
         response["Content-Disposition"] = f"attachment; filename={filename}"
         workbook.save(response)
+
+        return response
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+from io import BytesIO
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from django.http import HttpResponse, JsonResponse
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
+from .models import PaymentTransaction
+from datetime import datetime
+
+
+@api_view(["GET"])
+@authentication_classes([])
+@permission_classes([])
+def pdf_report_view(request, tenant_id):
+    try:
+        # Retrieve the data from the PaymentTransaction model for the specific Tenant
+        queryset = PaymentTransaction.objects.filter(
+            tenant_id=tenant_id, reversed=False
+        )
+
+        if not queryset.exists():
+            return JsonResponse(
+                {"error": "No transactions found for the given tenant_id."}, status=404
+            )
+
+        # Define styles for the header and other text
+        styles = getSampleStyleSheet()
+        header_style = ParagraphStyle(
+            "Header",
+            parent=styles["Heading1"],
+            fontName="Helvetica-Bold",
+            alignment=1,  # 0 for left, 1 for center, 2 for right
+            fontSize=18,
+        )
+        info_style = ParagraphStyle(
+            "Info",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=14,
+            textColor="black",
+            alignment=1,
+        )
+        tenant_style = ParagraphStyle(
+            "Info",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=12,
+            textColor="black",
+            alignment=0,
+        )
+
+        # Create the PDF document
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+
+        # Create the table and add data
+        data = [
+            [
+                "ID",
+                "Amount",
+                "Balance",
+                "Month",
+                "Year",
+                "Payment Method",
+                "Reference",
+                "Description",
+                "Processed By",
+                "Client",
+                "Created At",
+            ]
+        ]
+        for transaction in queryset:
+            data.append(
+                [
+                    transaction.id,
+                    transaction.amount,
+                    transaction.balance,
+                    transaction.month,
+                    transaction.year,
+                    str(transaction.payment_method),
+                    transaction.reference,
+                    transaction.description,
+                    str(transaction.processed_by),
+                    str(transaction.client),
+                    transaction.created_at,
+                ]
+            )
+
+        # Add table to the PDF
+        table = Table(data)
+        table.setStyle(
+            TableStyle(
+                [
+                    (
+                        "BACKGROUND",
+                        (0, 0),
+                        (-1, 0),
+                        colors.grey,
+                    ),  # Header row background color
+                    (
+                        "TEXTCOLOR",
+                        (0, 0),
+                        (-1, 0),
+                        colors.whitesmoke,
+                    ),  # Header row text color
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),  # Center align all cells
+                    (
+                        "FONTNAME",
+                        (0, 0),
+                        (-1, 0),
+                        "Helvetica-Bold",
+                    ),  # Bold font for header row
+                    (
+                        "BOTTOMPADDING",
+                        (0, 0),
+                        (-1, 0),
+                        12,
+                    ),  # Add padding to the header row
+                    (
+                        "BACKGROUND",
+                        (0, 1),
+                        (-1, -1),
+                        "#ffffff",
+                    ),  # Background color for data rows
+                ]
+            )
+        )
+
+        # Add the heading to the top of the page with more information
+        title_paragraph = Paragraph("VIZA-ESTO", header_style)
+
+        additional_info = Paragraph(
+            "PO Box 123<br/>"
+            "Nairobi, Kenya<br/>"
+            "Tel: +254 98 987732<br/>"
+            "Email: info@vizaesto.com<br/>",
+            info_style,
+        )
+
+        # doc.topMargin = 70  # Adjust the top margin to make space for the header
+        # doc.build([title_paragraph, additional_info, Spacer(1, 20), table])
+
+        # Create a response with the PDF file
+        response = HttpResponse(content_type="application/pdf")
+
+        current_datetime = datetime.now()
+
+        # Generate the timestamp in the Nairobi timezone
+        timestamp = current_datetime.strftime("%Y%m%d_%H%M%S")
+
+        # Find the room with the given tenant_id (You may need to implement the Tenant and Room models)
+
+        # Get the current date and time
+        current_datetime = datetime.now()
+
+        # Get the current month and year
+        current_month = int(current_datetime.month)
+        current_year = int(current_datetime.year)
+
+        # Calculate unpaid and prepaid months
+        last_transaction = queryset.order_by("-id").first()
+        balance = int(last_transaction.balance)
+        year = int(last_transaction.year)
+        month = int(last_transaction.month)
+
+        try:
+            tenant_details = Tenant.objects.get(pk=tenant_id)
+            room_id = tenant_details.room_id
+            name = (
+                tenant_details.fullname
+            )  # Set the 'name' variable with the tenant's name
+
+            # Get the room object using the retrieved room_id
+            room = Room.objects.get(pk=room_id)
+            room_number = room.room_number
+            estate = str(room.property)
+            monthly_price = int(room.monthly_price)
+
+        except Tenant.DoesNotExist:
+            # Handle the case when no tenant is found for the given tenant_id
+            room_id = None
+            monthly_price = None
+            name = "Undefined"
+
+        # Calculate the curr_balance
+        months_difference = ((current_year - year) * 12) + (current_month - month)
+
+        curr_balance = (-months_difference * monthly_price) + balance
+
+        tenant_info = Paragraph(
+            "Name : " + name + "<br/>"
+            "Estate : " + estate + "<br/>"
+            "Room No : " + str(room_number) + "<br/>"
+            "Rent : Ksh. " + str(monthly_price) + "/=",
+            tenant_style,
+        )
+        doc.topMargin = 70  # Adjust the top margin to make space for the header
+        doc.build([title_paragraph, additional_info, tenant_info, Spacer(1, 20), table])
+
+        # Append the timestamp to the filename
+        filename = f"{name}_Rent_Report_{timestamp}.pdf"
+
+        # Set the Content-Disposition header with the updated filename
+        response["Content-Disposition"] = f"attachment; filename={filename}"
+        response.write(buffer.getvalue())
 
         return response
 

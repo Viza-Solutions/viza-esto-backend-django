@@ -41,4 +41,6 @@ urlpatterns = [
     ),
     # reports
     path("excel-report/<int:tenant_id>", excel_report_view, name="excel_report"),
+    path('pdf_report/<int:tenant_id>/', pdf_report_view, name='pdf_report_view'),
+
 ]
