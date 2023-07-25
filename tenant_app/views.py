@@ -133,43 +133,48 @@ def retrieve_tenant(request, pk):
         current_month = int(current_datetime.month)
         current_year = int(current_datetime.year)
 
-        queryset = PaymentTransaction.objects.filter(tenant_id=pk, reversed=False)
-        # Calculate unpaid and prepaid months
-        last_transaction = queryset.order_by("-id").first()
-        balance = int(last_transaction.balance)
-        year = int(last_transaction.year)
-        month = int(last_transaction.month)
-
         try:
-            tenant_details = Tenant.objects.get(pk=pk)
-            room_id = tenant_details.room_id
-            name = (
-                tenant_details.fullname
-            )  # Set the 'name' variable with the tenant's name
+            queryset = PaymentTransaction.objects.filter(tenant_id=pk, reversed=False)
+            # Calculate unpaid and prepaid months
+            last_transaction = queryset.order_by("-id").first()
+            balance = int(last_transaction.balance)
+            year = int(last_transaction.year)
+            month = int(last_transaction.month)
 
-            # Get the room object using the retrieved room_id
-            room = Room.objects.get(pk=room_id)
-            room_number = room.room_number
-            estate = str(room.property)
-            monthly_price = int(room.monthly_price)
+            try:
+                tenant_details = Tenant.objects.get(pk=pk)
+                room_id = tenant_details.room_id
+                name = (
+                    tenant_details.fullname
+                )  # Set the 'name' variable with the tenant's name
 
-        except Tenant.DoesNotExist:
-            # Handle the case when no tenant is found for the given tenant_id
-            room_id = None
-            monthly_price = None
-            name = "Undefined"
+                # Get the room object using the retrieved room_id
+                room = Room.objects.get(pk=room_id)
+                room_number = room.room_number
+                estate = str(room.property)
+                monthly_price = int(room.monthly_price)
 
-        # Calculate the curr_balance
-        months_difference = ((current_year - year) * 12) + (current_month - month)
+            except Tenant.DoesNotExist:
+                # Handle the case when no tenant is found for the given tenant_id
+                room_id = None
+                monthly_price = None
+                name = "Undefined"
 
-        curr_balance = (-months_difference * monthly_price) + balance
+            # Calculate the curr_balance
+            months_difference = ((current_year - year) * 12) + (current_month - month)
 
-        if curr_balance > 0:
-            curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
-            typee = "Prepaid"
-        else:
-            curr_balance_str = "Underpaid Amount Ksh. " + str(curr_balance) + "/="
-            typee = "Underpaid"
+            curr_balance = (-months_difference * monthly_price) + balance
+
+            if curr_balance > 0:
+                curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
+                typee = "Prepaid"
+            else:
+                curr_balance_str = "Underpaid Amount Ksh. " + str(curr_balance) + "/="
+                typee = "Underpaid"
+        except:
+            typee = "N/A"
+            curr_balance = "N/A"
+            curr_balance_str = "No payment has ever been done"
 
         return Response(
             {
