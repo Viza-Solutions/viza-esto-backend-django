@@ -172,7 +172,12 @@ def retrieve_tenant(request, pk):
             typee = "Underpaid"
 
         return Response(
-            {"data": serializer.data, "type": typee, "amount": curr_balance}
+            {
+                "data": serializer.data,
+                "type": typee,
+                "amount": curr_balance,
+                "full_resp": curr_balance_str,
+            }
         )
     except Tenant.DoesNotExist:
         return Response(
