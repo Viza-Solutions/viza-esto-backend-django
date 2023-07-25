@@ -414,6 +414,15 @@ def pdf_report_view(request, tenant_id):
             alignment=0,
         )
 
+        bal_style = ParagraphStyle(
+            "Info",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=10,
+            textColor="black",
+            alignment=2,
+        )
+
         # Create the PDF document
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
@@ -431,7 +440,7 @@ def pdf_report_view(request, tenant_id):
                 "Description",
                 "Processed By",
                 "Client",
-                "Created At",
+                "Processed On",
             ]
         ]
         for transaction in queryset:
@@ -552,15 +561,35 @@ def pdf_report_view(request, tenant_id):
 
         curr_balance = (-months_difference * monthly_price) + balance
 
+        if curr_balance > 0:
+            curr_balance_str = "Prepaid Amount " + str(curr_balance) + "/="
+        else:
+            curr_balance_str = "Underpaid Amount " + str(curr_balance) + "/="
+
         tenant_info = Paragraph(
+            "<br/>"
             "Name : " + name + "<br/>"
             "Estate : " + estate + "<br/>"
             "Room No : " + str(room_number) + "<br/>"
             "Rent : Ksh. " + str(monthly_price) + "/=",
             tenant_style,
         )
+
+        balance_info = Paragraph(
+            "<br/>" "<br/>" "Balance : Ksh. " + str(curr_balance_str) + "/=",
+            bal_style,
+        )
         doc.topMargin = 70  # Adjust the top margin to make space for the header
-        doc.build([title_paragraph, additional_info, tenant_info, Spacer(1, 20), table])
+        doc.build(
+            [
+                title_paragraph,
+                additional_info,
+                tenant_info,
+                Spacer(1, 20),
+                table,
+                balance_info,
+            ]
+        )
 
         # Append the timestamp to the filename
         filename = f"{name}_Rent_Report_{timestamp}.pdf"

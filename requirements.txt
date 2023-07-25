@@ -7,11 +7,13 @@ django-excel-response==2.0.5
 djangorestframework==3.14.0
 et-xmlfile==1.1.0
 gunicorn==20.1.0
-jdcal==1.4.1 
+jdcal==1.4.1
 openpyxl==2.4.11
+Pillow==10.0.0
 psycopg2-binary==2.9.6
 PyJWT==2.7.0
 pytz==2023.3
+reportlab==4.0.4
 sqlparse==0.4.4
 tablib==3.5.0
 typing_extensions==4.7.1
