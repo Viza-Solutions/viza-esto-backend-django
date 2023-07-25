@@ -294,13 +294,11 @@ def excel_report_view(request, tenant_id):
             monthly_price = None
             name = "Undefined"
 
-        print("monthly_price")
-        print(monthly_price)
-
         worksheet.title = f"Statement- {name}"
 
         # Calculate the curr_balance
         months_difference = ((current_year - year) * 12) + (current_month - month)
+
         curr_balance = (-months_difference * monthly_price) + balance
 
         # Write unpaid and prepaid months information at the end of the sheet
