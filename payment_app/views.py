@@ -187,6 +187,7 @@ def delete_all_payment_transactions(request):
 
 # views.py
 # views.py
+from datetime import date
 import openpyxl
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
@@ -194,13 +195,12 @@ from .models import PaymentTransaction
 from openpyxl.chart import BarChart, Reference
 from rest_framework.decorators import authentication_classes, permission_classes
 
-
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([])
 def excel_report_view(request, tenant_id):
     # Retrieve the data from the PaymentTransaction model for the specific Tenant
-    queryset = PaymentTransaction.objects.filter(tenant_id=tenant_id)
+    queryset = PaymentTransaction.objects.filter(tenant_id=tenant_id).order_by('year', 'month')
 
     # Create a new workbook and add a worksheet
     workbook = openpyxl.Workbook()
@@ -256,6 +256,38 @@ def excel_report_view(request, tenant_id):
             cell = worksheet.cell(row=row_num, column=col_num)
             cell.value = value
             cell.alignment = data_alignment
+
+    # Calculate unpaid and prepaid months
+    curr_balance = 0
+    unpaid_months = 0
+    prepaid_months = 0
+
+    today = date.today()
+    for transaction in queryset:
+        if transaction.month and transaction.year:
+            payment_date = date(transaction.year, transaction.month, 1)
+            monthly_price = transaction.balance / transaction.month  # Assuming balance is for the full month
+            if payment_date >= today:
+                prepaid_months += 1
+                curr_balance = -prepaid_months * monthly_price
+            else:
+                unpaid_months += 1
+                curr_balance = unpaid_months * monthly_price
+
+    # Write unpaid and prepaid months information at the end of the sheet
+    unpaid_cell = worksheet.cell(row=len(queryset) + 2, column=1, value="Unpaid Months")
+    unpaid_cell.font = openpyxl.styles.Font(bold=True)
+    unpaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
+
+    unpaid_value_cell = worksheet.cell(row=len(queryset) + 2, column=2, value=unpaid_months)
+    unpaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
+
+    prepaid_cell = worksheet.cell(row=len(queryset) + 3, column=1, value="Prepaid Months")
+    prepaid_cell.font = openpyxl.styles.Font(bold=True)
+    prepaid_cell.alignment = openpyxl.styles.Alignment(horizontal="right")
+
+    prepaid_value_cell = worksheet.cell(row=len(queryset) + 3, column=2, value=prepaid_months)
+    prepaid_value_cell.alignment = openpyxl.styles.Alignment(horizontal="center")
 
     # Auto-fit column width for all columns
     for col_num, header in enumerate(headers, start=1):
