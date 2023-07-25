@@ -208,7 +208,6 @@ def excel_report_view(request, tenant_id):
         # Create the Excel file
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
-        worksheet.title = f"Payment Transactions Report - Tenant {tenant_id}"
 
         # Write the header row with bold font, centered alignment, and font color
         header_font = openpyxl.styles.Font(bold=True)
@@ -269,8 +268,9 @@ def excel_report_view(request, tenant_id):
 
         try:
             # Find the room with the given tenant_id
-            tenant_details = Room.objects.get(pk=tenant_id)
+            tenant_details = Tenant.objects.get(pk=tenant_id)
             room_id = tenant_details.room_id
+            name = tenant_details.fullname
 
             # Get the room object using the retrieved room_id
             room = Room.objects.get(pk=room_id)
@@ -279,9 +279,16 @@ def excel_report_view(request, tenant_id):
         except Room.DoesNotExist:
             # Handle the case when no room is found for the given tenant_id
             room_id = None
-            monthly_price = 3
+            monthly_price = None
+            name = "Undefined"
 
+
+
+        print("monthly_price")
         print(monthly_price)
+
+        worksheet.title = f"Statement- {name}"
+
 
         # Calculate the curr_balance
         months_difference = ((current_year - year) * 12) + (current_month - month)
@@ -311,7 +318,7 @@ def excel_report_view(request, tenant_id):
         response = HttpResponse(
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
-        response["Content-Disposition"] = f"attachment; filename=tenant_{tenant_id}_report.xlsx"
+        response["Content-Disposition"] = f"attachment; filename={name} Rent Report.xlsx"
         workbook.save(response)
 
         return response
