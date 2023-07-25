@@ -9,7 +9,7 @@ from rest_framework import serializers
 
 @api_view(["GET"])
 def tenant_list(request):
-    tenants = Tenant.objects.filter(deleted=False)
+    tenants = Tenant.objects.filter(deleted=False).order_by('fullname')
     serializer = TenantSerializer(tenants, many=True)
     return Response(serializer.data)
 
@@ -17,7 +17,7 @@ def tenant_list(request):
 # Get all tenants for a specific client
 @api_view(["GET"])
 def client_tenant_list(request, client_id):
-    tenants = Tenant.objects.filter(deleted=False, client_id=client_id)
+    tenants = Tenant.objects.filter(deleted=False, client_id=client_id).order_by('fullname')
     serializer = TenantSerializer(tenants, many=True)
     return Response(serializer.data)
 
@@ -25,7 +25,7 @@ def client_tenant_list(request, client_id):
 # Get all tenants for a specific property
 @api_view(["GET"])
 def property_tenant_list(request, property_id):
-    tenants = Tenant.objects.filter(deleted=False, property_id=property_id)
+    tenants = Tenant.objects.filter(deleted=False, property_id=property_id).order_by('fullname')
     serializer = TenantSerializer(tenants, many=True)
     return Response(serializer.data)
 
