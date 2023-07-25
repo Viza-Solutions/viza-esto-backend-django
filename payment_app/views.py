@@ -200,7 +200,7 @@ from openpyxl.chart import BarChart, Reference
 def excel_report_view(request, tenant_id):
     try:
         # Retrieve the data from the PaymentTransaction model for the specific Tenant
-        queryset = PaymentTransaction.objects.filter(tenant_id=tenant_id)
+        queryset = PaymentTransaction.objects.filter(tenant_id=tenant_id, reversed=False)
 
         if not queryset.exists():
             return JsonResponse({"error": "No transactions found for the given tenant_id."}, status=404)
