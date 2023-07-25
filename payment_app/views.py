@@ -258,14 +258,14 @@ def excel_report_view(request, tenant_id):
         current_datetime = datetime.now()
 
         # Get the current month and year
-        current_month = current_datetime.month
-        current_year = current_datetime.year
+        current_month = int(current_datetime.month)
+        current_year = int(current_datetime.year)
 
         # Calculate unpaid and prepaid months
         last_transaction = queryset.order_by('-id').first()
-        balance = last_transaction.balance
-        year = last_transaction.year
-        month = last_transaction.month
+        balance = int(last_transaction.balance)
+        year = int(last_transaction.year)
+        month = int(last_transaction.month)
 
         try:
             # Find the room with the given tenant_id
@@ -274,7 +274,7 @@ def excel_report_view(request, tenant_id):
 
             # Get the room object using the retrieved room_id
             room = Room.objects.get(pk=room_id)
-            monthly_price = room.monthly_price
+            monthly_price = int(room.monthly_price)
 
         except Room.DoesNotExist:
             # Handle the case when no room is found for the given tenant_id
