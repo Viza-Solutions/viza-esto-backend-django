@@ -12,8 +12,6 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from django.http import HttpResponse, JsonResponse
-from .models import PaymentTransaction
-from datetime import datetime
 import openpyxl
 
 
