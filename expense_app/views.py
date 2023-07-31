@@ -64,3 +64,5 @@ def expense_type_list_by_parent(request, parent_id=None):
 
     serializer = ExpenseTypeSerializer(expense_types, many=True)
     return Response(serializer.data)
+
+
