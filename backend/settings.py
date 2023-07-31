@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "property_app",
     "tenant_app",
     "payment_app",
+    "expense_app",
 ]
 
 MIDDLEWARE = [
@@ -133,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Africa/Nairobi'
+TIME_ZONE = "Africa/Nairobi"
 
 # TIME_ZONE = "UTC"
 
