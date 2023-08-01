@@ -8,14 +8,16 @@ from rest_framework import status
 
 @api_view(["GET"])
 def property_list(request):
-    properties = Property.objects.filter(deleted=False).order_by('name')
+    properties = Property.objects.filter(deleted=False).order_by("name")
     serializer = PropertySerializer(properties, many=True)
     return Response(serializer.data)
 
 
 @api_view(["GET"])
 def client_property_list(request, client_id):
-    properties = Property.objects.filter(deleted=False, client_id=client_id).order_by('name')
+    properties = Property.objects.filter(deleted=False, client_id=client_id).order_by(
+        "name"
+    )
     serializer = PropertySerializer(properties, many=True)
     return Response(serializer.data)
 
@@ -80,21 +82,25 @@ def delete_property(request, pk):
 # room
 @api_view(["GET"])
 def room_list(request):
-    rooms = Room.objects.filter(deleted=False).order_by('room_number')
+    rooms = Room.objects.filter(deleted=False).order_by("room_number")
     serializer = RoomSerializer(rooms, many=True)
     return Response(serializer.data)
 
 
 @api_view(["GET"])
 def client_room_list(request, client_id):
-    rooms = Room.objects.filter(deleted=False, client_id=client_id).order_by('room_number')
+    rooms = Room.objects.filter(deleted=False, client_id=client_id).order_by(
+        "room_number"
+    )
     serializer = RoomSerializer(rooms, many=True)
     return Response(serializer.data)
 
 
 @api_view(["GET"])
 def property_room_list(request, property_id):
-    rooms = Room.objects.filter(deleted=False, property_id=property_id).order_by('room_number')
+    rooms = Room.objects.filter(deleted=False, property_id=property_id).order_by(
+        "room_number"
+    )
     serializer = RoomSerializer(rooms, many=True)
     return Response(serializer.data)
 
@@ -104,7 +110,7 @@ def property_available_room_list(request, property_id):
     try:
         rooms = Room.objects.filter(
             deleted=False, property_id=property_id, is_available=True
-        ).order_by('room_number')
+        ).order_by("room_number")
         if not rooms.exists():
             raise NotFound("No available rooms for the given property.")
 
@@ -202,7 +208,7 @@ def create_room_type(request):
 # Read (List) RoomTypes
 @api_view(["GET"])
 def list_room_types(request):
-    room_types = RoomType.objects.all().order_by('name')
+    room_types = RoomType.objects.all().order_by("name")
     serializer = RoomTypeSerializer(room_types, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
