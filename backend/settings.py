@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "tenant_app",
     "payment_app",
     "expense_app",
+    "issue_notice_app",
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 from client_app.models import Client
 from property_app.models import Property, Room
 from django.conf import settings
