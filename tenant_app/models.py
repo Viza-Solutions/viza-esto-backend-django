@@ -8,14 +8,14 @@ from django.core.validators import RegexValidator
 class KenyanPhoneNumberField(models.CharField):
     default_validators = [
         RegexValidator(
-            regex=r'^\+254\d{9}$',
-            message='Phone number must be in the format +254XXXXXXXXX.',
-            code='invalid_phone_number'
+            regex=r"^\+254\d{9}$",
+            message="Phone number must be in the format +254XXXXXXXXX.",
+            code="invalid_phone_number",
         )
     ]
 
     def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = 13  # "+254" plus 9 digits
+        kwargs["max_length"] = 13  # "+254" plus 9 digits
         super().__init__(*args, **kwargs)
 
 
@@ -24,12 +24,29 @@ class Tenant(models.Model):
         ("Active", "Active"),
         ("Inactive", "Inactive"),
     )
+    GENDER_CHOICES = [
+        ("Male", "Male"),
+        ("Female", "Female"),
+    ]
 
+    INTRO_CHOICES = [
+        ("Self", "Self"),
+        ("Agent", "Agent"),
+    ]
     fullname = models.CharField(max_length=255)
-    alternative_names = models.TextField(blank=True, null=True)
+    alternative_names = models.CharField(blank=True, null=True)
+    next_of_kin = models.CharField(blank=True, null=True)
     id_number = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone_number = KenyanPhoneNumberField()
+    date_of_birth = models.DateField(blank=True, null=True)
+    date_of_lease = models.DateField(blank=True, null=True)
+    gender = models.CharField(
+        max_length=6,
+        choices=GENDER_CHOICES,
+        blank=True,
+        null=True,
+    )
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     added_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
@@ -41,9 +58,22 @@ class Tenant(models.Model):
         max_digits=10, decimal_places=2, blank=True, null=True
     )
     deleted = models.BooleanField(default=False)
+
+    # AGENT
+    intro_by = models.CharField(
+        max_length=5,  # Adjust the max_length according to your needs
+        choices=INTRO_CHOICES,
+        default='Self'
+    )
+    agent_name = models.CharField(max_length=50, blank=True, null=True)
+    agent_phone = KenyanPhoneNumberField(blank=True, null=True)
+    agent_id_number = models.CharField(max_length=50, blank=True, null=True)
+    agent_commission = models.CharField(max_length=50, blank=True, null=True)
+    agent_trasaction_ref = models.CharField(max_length=50, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
         return f"{self.fullname}"
 
