@@ -80,12 +80,17 @@ def retrieve_expense(request, pk):
     )
 
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def create_expense(request):
     """
     Create a new expense.
     """
-    serializer = ExpenseSerializer(data=request.data)
+    serializer = ExpenseSerializer(data=request.data, context={"request": request})
     if serializer.is_valid():
         serializer.save()
         return Response(

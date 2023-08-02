@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import EstateIssue, TenantNotice
 
-# Register your models here.
+admin.site.register(EstateIssue)
+admin.site.register(TenantNotice)
