@@ -69,7 +69,7 @@ def sms_to_unpaid_bal():
                 # typee = "Prepaid"
                 pass
             else:
-                curr_balance_str = "Underpaid Amount Ksh. " + str(curr_balance) + "/="
+                curr_balance_str = "Underpaid Amount KES " + str(curr_balance) + "/="
                 typee = "Underpaid"
 
                 # print(curr_balance)
