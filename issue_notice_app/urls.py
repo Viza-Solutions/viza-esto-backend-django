@@ -13,8 +13,9 @@ urlpatterns = [
     
     # Tenant Notice URLs
     path('notice/create', views.create_tenant_notice, name='create-tenant-notice'),
-    path('get-tenant-notice/<int:notice_id>', views.get_tenant_notice, name='get-tenant-notice'),
-    path('update-tenant-notice/<int:notice_id>', views.update_tenant_notice, name='update-tenant-notice'),
-    path('delete-tenant-notice/<int:notice_id>', views.delete_tenant_notice, name='delete-tenant-notice'),
-    path('pending-notices', views.pending_notices, name='pending-notices'),
+    path('notice/get/<int:notice_id>', views.get_tenant_notice, name='get-tenant-notice'),
+    path('notice/update/<int:notice_id>', views.update_tenant_notice, name='update-tenant-notice'),
+    path('notice/delete/<int:notice_id>', views.delete_tenant_notice, name='delete-tenant-notice'),
+    path('notices/pending-notices', views.pending_notices, name='pending-notices'),
+    path('notices/close/<int:notice_id>', views.close_tenant_notice, name='close_tenant_notice'),
 ]

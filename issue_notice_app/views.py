@@ -234,7 +234,7 @@ def delete_tenant_notice(request, notice_id):
 def pending_notices(request):
     current_date = date.today()
     pending_notices = TenantNotice.objects.filter(
-        date_to_vacate__gte=current_date
+        date_to_vacate__gte=current_date, is_active=True
     ).order_by("date_to_vacate")
 
     serializer = TenantNoticeSerializer(pending_notices, many=True)
@@ -244,3 +244,31 @@ def pending_notices(request):
             "data": serializer.data,
         }
     )
+
+
+@api_view(["PUT"])
+def close_tenant_notice(request, notice_id):
+    try:
+        notice = TenantNotice.objects.get(pk=notice_id)
+    except TenantNotice.DoesNotExist:
+        return Response(
+            {"message": "Tenant Notice not found."},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    if notice.is_active:
+        notice.is_active = False
+        notice.closed_by = request.user  # Assuming you're using authentication
+
+        notice.save()
+
+        return Response(
+            {"message": "Tenant Notice closed successfully."},
+            status=status.HTTP_200_OK
+        )
+    else:
+        return Response(
+            {"message": "Tenant Notice is already closed."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
