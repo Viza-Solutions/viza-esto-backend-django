@@ -62,7 +62,7 @@ def sms_to_unpaid_bal():
             # Calculate the curr_balance
             months_difference = ((current_year - year) * 12) + (current_month - month)
 
-            curr_balance = (-months_difference * monthly_price) + balance
+            curr_balance = abs((-months_difference * monthly_price) + balance)
 
             if curr_balance > 0:
                 # curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
