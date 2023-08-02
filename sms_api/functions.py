@@ -1,10 +1,11 @@
 import africastalking
-from property_app.models import Property, Room
+from property_app.models import Room
 from tenant_app.models import *
 from payment_app.models import *
 from datetime import datetime
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def send_sms(message, recepient):
@@ -91,10 +92,11 @@ def sms_to_unpaid_bal():
             # curr_balance_str = "No payment has ever been done"
             pass
 
+    print("DONE!!!!")
 
 def start():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(sms_to_unpaid_bal, "interval", minutes=700)
+    scheduler.add_job(sms_to_unpaid_bal, "cron", month="*", day=2, hour=13, minute=20, second=0)
     scheduler.start()
 
 

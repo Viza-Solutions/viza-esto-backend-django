@@ -172,7 +172,16 @@ def create_payment_transaction(request):
         # send sms
         amount_paid = serializer.validated_data["amount"]
         current_datetime_sms = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        message = f"Thank you for your payment of KES {amount_paid:,.2f}. Your rent has been received. Your current balance is KES {new_balance:,.2f} as of {current_datetime_sms}."
+        # message = f"Thank you for your payment of KES {amount_paid:,.2f}. Your rent has been received. Your current balance is KES {new_balance:,.2f} as of {current_datetime_sms}."
+
+        message = (
+            f"Dear {tenant.fullname},\n\n"
+            f"We extend our gratitude for your payment of KES {amount_paid:,.2f}. Your rent has been successfully received. "
+            f"Your current balance now stands at KES {new_balance:,.2f} as of {current_datetime_sms}.\n\n"
+            f"Should you have any queries or require further assistance, please don't hesitate to reach out. Thank you for choosing us as your property management team.\n\n"
+            f"Best regards,\n"
+            f"Your Property Management Team"
+        )
         recepient = ["+254790780464"]
         send_sms(message, recepient)
 
@@ -614,4 +623,3 @@ def get_transactions_for_tenant(request, tenant_id):
 
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-
