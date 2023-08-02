@@ -252,8 +252,7 @@ def close_tenant_notice(request, notice_id):
         notice = TenantNotice.objects.get(pk=notice_id)
     except TenantNotice.DoesNotExist:
         return Response(
-            {"message": "Tenant Notice not found."},
-            status=status.HTTP_404_NOT_FOUND
+            {"message": "Tenant Notice not found."}, status=status.HTTP_404_NOT_FOUND
         )
 
     if notice.is_active:
@@ -263,12 +262,10 @@ def close_tenant_notice(request, notice_id):
         notice.save()
 
         return Response(
-            {"message": "Tenant Notice closed successfully."},
-            status=status.HTTP_200_OK
+            {"message": "Tenant Notice closed successfully."}, status=status.HTTP_200_OK
         )
     else:
         return Response(
             {"message": "Tenant Notice is already closed."},
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_400_BAD_REQUEST,
         )
-

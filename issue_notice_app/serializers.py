@@ -14,9 +14,6 @@ class EstateIssueSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-    
-
-
 class TenantNoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TenantNotice
