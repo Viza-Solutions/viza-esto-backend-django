@@ -77,11 +77,11 @@ def sms_to_unpaid_bal():
 
                 message = (
                     f"Hello {tenant.fullname},\n\n"
-                    f"This is a friendly reminder that your current outstanding balance is {curr_balance_str}. "
-                    f"Please settle your rent payment to avoid any inconvenience. "
-                    f"We value your prompt attention to this matter.\n\n"
-                    f"Thank you,\n"
-                    f"Your Property Management Team"
+                    f"This is a friendly reminder that your current outstanding balance is KES {curr_balance_str}. "
+                    # f"Please settle your rent payment to avoid any inconvenience. "
+                    # f"We value your prompt attention to this matter.\n\n"
+                    # f"Thank you,\n"
+                    # f"Your Property Management Team"
                 )
 
                 recepient = [tenant.phone_number]
@@ -100,7 +100,7 @@ def start():
     scheduler.add_job(
         sms_to_unpaid_bal, "cron", month="*", day=5, hour=8, minute=30, second=0
     )
-    # scheduler.add_job(sms_to_unpaid_bal, "interval", seconds=30)
+    # scheduler.add_job(sms_to_unpaid_bal, "interval", seconds=2)
     scheduler.start()
 
 
