@@ -92,7 +92,7 @@ def sms_to_unpaid_bal():
             # curr_balance_str = "No payment has ever been done"
             pass
 
-    print("DONE!!!!")
+    # print("DONE!!!!")
 
 def start():
     scheduler = BackgroundScheduler()
