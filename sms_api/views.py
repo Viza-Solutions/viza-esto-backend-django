@@ -56,8 +56,8 @@ def sms_to_property_tenants(request, property_id):
 def tenant_info(tenant, message):
     fullname = tenant.fullname
     email = tenant.email
-    # phone_number = tenant.phone_number
-    phone_number = "+254790780464"
+    phone_number = tenant.phone_number
+    # phone_number = "+254790780464"
 
     try:
         send_sms(message, [phone_number])

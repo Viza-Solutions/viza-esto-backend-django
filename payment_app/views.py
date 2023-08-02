@@ -191,7 +191,7 @@ def create_payment_transaction(request):
             f"Best regards,\n"
             f"Your Property Management Team"
         )
-        recepient = ["+254790780464"]
+        recepient = [tenant.phone_number]
         send_sms(message, recepient)
 
         return Response(

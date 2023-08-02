@@ -83,7 +83,8 @@ def sms_to_unpaid_bal():
                     f"Thank you,\n"
                     f"Your Property Management Team"
                 )
-                recepient = ["+254790780464"]
+
+                recepient = [tenant.phone_number]
                 send_sms(message, recepient)
         except:
             # typee = "N/A"
