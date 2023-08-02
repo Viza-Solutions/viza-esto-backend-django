@@ -45,3 +45,4 @@ class TenantNotice(models.Model):
 
     def __str__(self):
         return self.reason or "No reason provided"
+

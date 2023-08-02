@@ -46,6 +46,7 @@ urlpatterns = [
 
     # get trasactions
     path('tenant-transactions/<int:tenant_id>', get_transactions_for_tenant, name='get_transactions_for_tenant'),
+    # path('sms', sms, name='sms'),
 
 
 ]

@@ -14,6 +14,8 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from django.http import HttpResponse, JsonResponse
 import openpyxl
 
+from sms_api.functions import *
+
 
 # Views
 @api_view(["GET"])
@@ -166,6 +168,14 @@ def create_payment_transaction(request):
             year=current_year,
             uuid=uuid,
         )
+
+        # send sms
+        amount_paid = serializer.validated_data["amount"]
+        current_datetime_sms = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        message = f"Thank you for your payment of KES {amount_paid:,.2f}. Your rent has been received. Your current balance is KES {new_balance:,.2f} as of {current_datetime_sms}."
+        recepient = ["+254790780464"]
+        send_sms(message, recepient)
+
         return Response(
             {
                 "message": "Payment transaction created successfully",
@@ -604,3 +614,25 @@ def get_transactions_for_tenant(request, tenant_id):
 
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+
+# import africastalking
+# from django.http import JsonResponse
+
+# @api_view(["POST"])
+# def sms(request):
+#     username = "viza"
+#     api_key = "c26815e841421b75a25fa8206800dc001b347d28f6c43881d5ad1151f539137d"
+#     africastalking.initialize(username, api_key)
+#     sms = africastalking.SMS
+
+#     # Or use it asynchronously
+#     def on_finish(error, response):
+#         if error is not None:
+#             raise error
+#         print(response)
+
+#     sms.send("Hello Message!", ["+254790780464", "+254798163467"], callback=on_finish)
+
+#     # Return a JSON response indicating success
+#     return JsonResponse({"message": "SMS sent successfully!"})

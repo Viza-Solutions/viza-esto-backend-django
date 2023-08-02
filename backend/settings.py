@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "payment_app",
     "expense_app",
     "issue_notice_app",
+    "sms_api"
 ]
 
 MIDDLEWARE = [
