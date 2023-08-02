@@ -21,3 +21,9 @@ class TenantNoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TenantNotice
         fields = "__all__"
+
+        read_only_fields = ("posted_by",)
+
+    def create(self, validated_data):
+        validated_data["posted_by"] = self.context["request"].user
+        return super().create(validated_data)

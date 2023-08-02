@@ -42,6 +42,8 @@ class TenantNotice(models.Model):
     )
     property = models.ForeignKey(Property, on_delete=models.SET_NULL, null=True)
     date_to_vacate = models.DateField()
+    is_active = models.BooleanField(default=True)
+
 
     def __str__(self):
         return self.reason or "No reason provided"

@@ -157,7 +157,9 @@ def get_unresolved_issues_for_client(request, client_id):
 @api_view(["POST"])
 def create_tenant_notice(request):
     if request.method == "POST":
-        serializer = TenantNoticeSerializer(data=request.data)
+        serializer = TenantNoticeSerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(

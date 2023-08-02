@@ -12,7 +12,7 @@ urlpatterns = [
     path('close-issue/<int:issue_id>', views.close_estate_issue, name='close_estate_issue'),
     
     # Tenant Notice URLs
-    path('create-tenant-notice', views.create_tenant_notice, name='create-tenant-notice'),
+    path('notice/create', views.create_tenant_notice, name='create-tenant-notice'),
     path('get-tenant-notice/<int:notice_id>', views.get_tenant_notice, name='get-tenant-notice'),
     path('update-tenant-notice/<int:notice_id>', views.update_tenant_notice, name='update-tenant-notice'),
     path('delete-tenant-notice/<int:notice_id>', views.delete_tenant_notice, name='delete-tenant-notice'),
