@@ -73,9 +73,7 @@ def sms_to_unpaid_bal():
                 typee = "Underpaid"
 
                 # print(curr_balance)
-                curr_balance_str = (
-                    f"Ksh {abs(curr_balance):.2f}"  # Format balance with two decimal places
-                )
+                curr_balance_str = f"Ksh {abs(curr_balance):.2f}"  # Format balance with two decimal places
 
                 message = (
                     f"Hello {tenant.fullname},\n\n"
@@ -95,10 +93,14 @@ def sms_to_unpaid_bal():
 
     print("DONE!!!!")
 
+
 def start():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(sms_to_unpaid_bal, "cron", month="*", day=5, hour=8, minute=30, second=0)
+    scheduler.add_job(
+        sms_to_unpaid_bal, "cron", month="*", day=5, hour=8, minute=30, second=0
+    )
     # scheduler.add_job(sms_to_unpaid_bal, "interval", seconds=30)
     scheduler.start()
+
 
 start()
