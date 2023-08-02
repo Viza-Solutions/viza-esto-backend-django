@@ -8,4 +8,5 @@ urlpatterns = [
     path("payment/", include("payment_app.urls")),
     path("expense/", include("expense_app.urls")),
     path("issue-notice/", include("issue_notice_app.urls")),
+    path("sms/", include("sms_api.urls")),
 ]
