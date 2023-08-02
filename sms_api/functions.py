@@ -99,5 +99,4 @@ def start():
     scheduler.add_job(sms_to_unpaid_bal, "cron", month="*", day=5, hour=8, minute=30, second=0)
     scheduler.start()
 
-
 start()
