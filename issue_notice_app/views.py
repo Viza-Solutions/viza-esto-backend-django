@@ -12,7 +12,9 @@ from datetime import date
 @api_view(["POST"])
 def create_estate_issue(request):
     if request.method == "POST":
-        serializer = EstateIssueSerializer(data=request.data)
+        serializer = EstateIssueSerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -64,6 +66,32 @@ def update_estate_issue(request, issue_id):
         {"message": "Failed to update estate issue.", "errors": serializer.errors},
         status=status.HTTP_400_BAD_REQUEST,
     )
+
+
+@api_view(["PUT"])
+def close_estate_issue(request, issue_id):
+    try:
+        issue = EstateIssue.objects.get(pk=issue_id)
+    except EstateIssue.DoesNotExist:
+        return Response(
+            {"message": "Estate issue not found."}, status=status.HTTP_404_NOT_FOUND
+        )
+
+    if issue.is_open:
+        issue.is_open = False
+        issue.closed_by = request.user  # Assuming you're using authentication
+
+        issue.save()
+
+        return Response(
+            {"message": "Estate issue closed successfully."},
+            status=status.HTTP_200_OK,
+        )
+    else:
+        return Response(
+            {"message": "Estate issue is already closed."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 # Delete
