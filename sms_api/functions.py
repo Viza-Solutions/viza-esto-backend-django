@@ -79,7 +79,7 @@ def sms_to_unpaid_bal():
                 message = (
                     f"Hello {tenant.fullname},\n\n"
                     f"This is a friendly reminder that your current outstanding balance is {curr_balance_str}. "
-                    f"Please settle your rent payment at your earliest convenience to avoid any inconvenience. "
+                    f"Please settle your rent payment to avoid any inconvenience. "
                     f"We value your prompt attention to this matter.\n\n"
                     f"Thank you,\n"
                     f"Your Property Management Team"
