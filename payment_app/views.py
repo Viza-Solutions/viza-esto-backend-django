@@ -176,7 +176,7 @@ def create_payment_transaction(request):
 
         message = (
             f"Dear {tenant.fullname},\n\n"
-            f"We extend our gratitude for your payment of KES {amount_paid:,.2f}. Your rent has been successfully received. "
+            f"Your rent payment of KES {amount_paid:,.2f} has been successfully received. "
             f"Your current balance now stands at KES {new_balance:,.2f} as of {current_datetime_sms}.\n\n"
             f"Should you have any queries or require further assistance, please don't hesitate to reach out. Thank you for choosing us as your property management team.\n\n"
             f"Best regards,\n"
