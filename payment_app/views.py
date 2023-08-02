@@ -176,10 +176,11 @@ def create_payment_transaction(request):
 
         if new_balance > 0:
             # overpayment
-            mm = f" You have made an overpayment of KES {new_balance:,.2f}"
+            # mm = f" You have made an overpayment of KES {new_balance:,.2f}"
+            mm = ""
         elif new_balance < 0:
             # underpayment
-            mm = f" Your current is KES {abs(new_balance):,.2f}"
+            mm = f" Your current balance is KES {abs(new_balance):,.2f}"
         else:
             # settled
             mm = ""
