@@ -182,11 +182,11 @@ def create_payment_transaction(request):
             mm = f" Your current is KES {abs(new_balance):,.2f}"
         else:
             # settled
-            mm = " Your account has been settled fully"
+            mm = ""
         message = (
             f"Dear {tenant.fullname},\n\n"
             f"Your rent payment of KES {amount_paid:,.2f} has been successfully received. "
-            f"{mm} as of {current_datetime_sms}.\n\n"
+            f"{mm}."
             # f"Should you have any queries or require further assistance, please don't hesitate to reach out. Thank you for choosing us as your property management team.\n\n"
             # f"Best regards,\n"
             # f"Your Property Management Team"
