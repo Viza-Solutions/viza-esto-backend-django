@@ -174,10 +174,19 @@ def create_payment_transaction(request):
         current_datetime_sms = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # message = f"Thank you for your payment of KES {amount_paid:,.2f}. Your rent has been received. Your current balance is KES {new_balance:,.2f} as of {current_datetime_sms}."
 
+        if new_balance > 0:
+            # overpayment
+            mm = f" You have made an overpayment of KES {new_balance:,.2f}"
+        elif new_balance < 0:
+            # underpayment
+            mm = f" Your current balance after the payment is KES {abs(new_balance):,.2f}"
+        else:
+            # settled
+            mm = " Your account has been settled fully"
         message = (
             f"Dear {tenant.fullname},\n\n"
             f"Your rent payment of KES {amount_paid:,.2f} has been successfully received. "
-            f"Your current balance now stands at KES {new_balance:,.2f} as of {current_datetime_sms}.\n\n"
+            f"{mm} as of {current_datetime_sms}.\n\n"
             f"Should you have any queries or require further assistance, please don't hesitate to reach out. Thank you for choosing us as your property management team.\n\n"
             f"Best regards,\n"
             f"Your Property Management Team"

@@ -62,7 +62,7 @@ def sms_to_unpaid_bal():
             # Calculate the curr_balance
             months_difference = ((current_year - year) * 12) + (current_month - month)
 
-            curr_balance = abs((-months_difference * monthly_price) + balance)
+            curr_balance = (-months_difference * monthly_price) + balance
 
             if curr_balance > 0:
                 # curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
@@ -72,10 +72,11 @@ def sms_to_unpaid_bal():
                 curr_balance_str = "Underpaid Amount Ksh. " + str(curr_balance) + "/="
                 typee = "Underpaid"
 
-                print(curr_balance)
+                # print(curr_balance)
                 curr_balance_str = (
-                    f"Ksh {curr_balance:.2f}"  # Format balance with two decimal places
+                    f"Ksh {abs(curr_balance):.2f}"  # Format balance with two decimal places
                 )
+
                 message = (
                     f"Hello {tenant.fullname},\n\n"
                     f"This is a friendly reminder that your current outstanding balance is {curr_balance_str}. "
@@ -92,11 +93,12 @@ def sms_to_unpaid_bal():
             # curr_balance_str = "No payment has ever been done"
             pass
 
-    # print("DONE!!!!")
+    print("DONE!!!!")
 
 def start():
     scheduler = BackgroundScheduler()
     scheduler.add_job(sms_to_unpaid_bal, "cron", month="*", day=5, hour=8, minute=30, second=0)
+    # scheduler.add_job(sms_to_unpaid_bal, "interval", seconds=30)
     scheduler.start()
 
 start()
