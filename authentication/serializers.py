@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import *
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -55,4 +55,17 @@ class UserSerializer(serializers.ModelSerializer):
 class UserSerializerrrrr(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'phone_number', 'user_status']
+        fields = [
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "user_status",
+        ]
+
+
+class UserMappingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserMapping
+        fields = "__all__"

@@ -8,6 +8,10 @@ from django.contrib import auth
 from django.contrib.auth import authenticate
 
 
+from rest_framework.decorators import api_view
+from .models import User, UserMapping
+
+
 # Create your views here.
 
 
@@ -61,14 +65,7 @@ class LoginAPIView(GenericAPIView):
         )
 
 
-
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import User
-from .serializers import UserSerializer
-
-@api_view(['GET'])
+@api_view(["GET"])
 def user_detail(request, pk):
     try:
         user = User.objects.get(pk=pk)
@@ -79,8 +76,55 @@ def user_detail(request, pk):
     return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def user_list(request, client_id):
     users = User.objects.filter(client_id=client_id)
     serializer = UserSerializerrrrr(users, many=True)  # Use your serializer
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# user mapping
+
+# users mapping
+
+
+@api_view(["GET"])
+def get_user_mappings_all(request):
+    user_mappings = UserMapping.objects.all()
+    serializer = UserMappingSerializer(user_mappings, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def get_user_mappings(request, user_id):
+    user_mappings = UserMapping.objects.filter(user__id=user_id)
+    serializer = UserMappingSerializer(user_mappings, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+def create_user_mapping(request):
+    serializer = UserMappingSerializer(data=request.data)
+    if serializer.is_valid():
+        property_linked = serializer.validated_data["property_linked"]
+        user_id = serializer.validated_data["user"].id
+
+        # Try to get the user mapping instance, or create it if it doesn't exist
+        user_mapping, created = UserMapping.objects.get_or_create(
+            property_linked=property_linked, user_id=user_id
+        )
+
+        if created:
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(
+                {"error": "User mapping already exists."}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["DELETE"])
+def delete_user_mapping(request, pk):
+    user_mapping = UserMapping.objects.get(pk=pk)
+    user_mapping.delete()
+    return Response(status=204)
