@@ -39,6 +39,7 @@ class PaymentTransaction(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     reversed = models.BooleanField(default=False)
     uuid = models.UUIDField(default=uuid4, unique=True, editable=False)
+    date_of_payment = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
