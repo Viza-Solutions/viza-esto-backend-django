@@ -123,7 +123,8 @@ def get_unresolved_issues_for_property(request, property_id):
             {"message": "Property not found."}, status=status.HTTP_404_NOT_FOUND
         )
 
-    unresolved_issues = EstateIssue.objects.filter(property=property_, is_open=True)
+    # unresolved_issues = EstateIssue.objects.filter(property=property_, is_open=True)
+    unresolved_issues = EstateIssue.objects.filter(property=property_)
     serializer = EstateIssueSerializer(unresolved_issues, many=True)
     return Response(
         {
@@ -142,7 +143,8 @@ def get_unresolved_issues_for_client(request, client_id):
             {"message": "Client not found."}, status=status.HTTP_404_NOT_FOUND
         )
 
-    unresolved_issues = EstateIssue.objects.filter(client=client, is_open=True)
+    # unresolved_issues = EstateIssue.objects.filter(client=client, is_open=True)
+    unresolved_issues = EstateIssue.objects.filter(client=client)
     serializer = EstateIssueSerializer(unresolved_issues, many=True)
     return Response(
         {
