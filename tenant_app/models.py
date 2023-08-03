@@ -63,7 +63,7 @@ class Tenant(models.Model):
     intro_by = models.CharField(
         max_length=5,  # Adjust the max_length according to your needs
         choices=INTRO_CHOICES,
-        default='Self'
+        default="Self",
     )
     agent_name = models.CharField(max_length=50, blank=True, null=True)
     agent_phone = KenyanPhoneNumberField(blank=True, null=True)
@@ -73,7 +73,7 @@ class Tenant(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return f"{self.fullname}"
 
