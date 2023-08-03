@@ -10,5 +10,5 @@ urlpatterns = [
     path("user", AuthUserAPIView.as_view(), name="auth-user"),
     # path('verify-email/<uidb64>/<token>', VerifyEmail.as_view(), name='activate'),
     path("users/<int:pk>", views.user_detail),
-    path("user_list", views.user_list),
+    path("user_list/<int:client_id>", views.user_list),
 ]

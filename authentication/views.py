@@ -80,7 +80,7 @@ def user_detail(request, pk):
 
 
 @api_view(['GET'])
-def user_list(request):
-    users = User.objects.all()
+def user_list(request, client_id):
+    users = User.objects.filter(client_id=client_id)
     serializer = UserSerializerrrrr(users, many=True)  # Use your serializer
     return Response(serializer.data, status=status.HTTP_200_OK)
