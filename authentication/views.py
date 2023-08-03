@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view
 from .models import User, UserMapping
 
+from django.shortcuts import get_object_or_404
+
 
 # Create your views here.
 
@@ -118,13 +120,25 @@ def create_user_mapping(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(
-                {"error": "User mapping already exists."}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "User mapping already exists."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(["DELETE"])
 def delete_user_mapping(request, pk):
-    user_mapping = UserMapping.objects.get(pk=pk)
-    user_mapping.delete()
-    return Response(status=204)
+    user_mapping = get_object_or_404(UserMapping, pk=pk)
+
+    try:
+        user_mapping.delete()
+        return Response(
+            {"detail": "User mapping deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
+    except Exception as e:
+        return Response(
+            {"detail": "An error occurred while deleting the user mapping."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
