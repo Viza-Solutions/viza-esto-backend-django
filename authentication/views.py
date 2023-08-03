@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import *
 from rest_framework.response import Response
 from rest_framework import status, permissions, response
 from django.contrib import auth
@@ -82,5 +82,5 @@ def user_detail(request, pk):
 @api_view(['GET'])
 def user_list(request):
     users = User.objects.all()
-    serializer = UserSerializer(users, many=True)
-    return Response(serializer.data)
+    serializer = UserSerializerrrrr(users, many=True)  # Use your serializer
+    return Response(serializer.data, status=status.HTTP_200_OK)
