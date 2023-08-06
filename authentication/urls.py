@@ -12,6 +12,8 @@ urlpatterns = [
     path("users/<int:pk>", views.user_detail),
     path("user_list/<int:client_id>", views.user_list),
 
+    path('users/update/<int:pk>', views.user_partial_update, name='user-partial-update'),
+
     # user_mapping  
     path('prop-assign/get_all', get_user_mappings_all, name='get_user_mappings_all'),
     path('prop-assign/get/<int:user_id>', get_user_mappings, name='get_user_mappings'),
