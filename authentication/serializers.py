@@ -66,6 +66,7 @@ class UserSerializerrrrr(serializers.ModelSerializer):
         ]
 
 
+
 class UserMappingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMapping
