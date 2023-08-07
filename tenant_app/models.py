@@ -35,7 +35,6 @@ class Tenant(models.Model):
     ]
     fullname = models.CharField(max_length=255)
     alternative_names = models.CharField(blank=True, null=True)
-    next_of_kin = models.CharField(blank=True, null=True)
     id_number = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone_number = KenyanPhoneNumberField()
@@ -58,6 +57,11 @@ class Tenant(models.Model):
         max_digits=10, decimal_places=2, blank=True, null=True
     )
     deleted = models.BooleanField(default=False)
+
+    # next of kin
+    next_of_kin = models.CharField(blank=True, null=True)
+    next_of_kin_contact = KenyanPhoneNumberField(blank=True, null=True)
+
 
     # AGENT
     intro_by = models.CharField(

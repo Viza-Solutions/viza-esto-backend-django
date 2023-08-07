@@ -2,30 +2,40 @@ import africastalking
 from property_app.models import Room
 from tenant_app.models import *
 from payment_app.models import *
+from .models import *
 from datetime import datetime
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def send_sms(message, recepient):
-    username = "viza"
-    api_key = "c26815e841421b75a25fa8206800dc001b347d28f6c43881d5ad1151f539137d"
-    africastalking.initialize(username, api_key)
-    sms = africastalking.SMS
+def send_sms(message, recipient, client_id):
+    try:
+        sms_credential = SmsCredential.objects.get(client_id=client_id)
+        api_key = sms_credential.api
+        username = sms_credential.username
 
-    def on_finish(error, response):
-        if error is not None:
-            raise error
-        # print(response)
+        # username = "viza"
+        # api_key = "c26815e841421b75a25fa8206800dc001b347d28f6c43881d5ad1151f539137d"
 
-    sms.send(message, recepient, callback=on_finish)
+        africastalking.initialize(username, api_key)
+        sms = africastalking.SMS
+
+        def on_finish(error, response):
+            if error is not None:
+                raise error
+
+        sms.send(message, recipient, callback=on_finish)
+
+    except SmsCredential.DoesNotExist:
+        print(f"No SmsCredential found for client with ID {client_id}")
 
 
 def sms_to_unpaid_bal():
-    tenants = Tenant.objects.all()
+    tenants = Tenant.objects.filter(deleted=False)
     for tenant in tenants:
         pk = tenant.id
+        client_id = tenant.client.id
         current_datetime = datetime.now()
 
         # Get the current month and year
@@ -65,8 +75,6 @@ def sms_to_unpaid_bal():
             curr_balance = (-months_difference * monthly_price) + balance
 
             if curr_balance > 0:
-                # curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
-                # typee = "Prepaid"
                 pass
             else:
                 curr_balance_str = "Underpaid Amount KES " + str(curr_balance) + "/="
@@ -78,21 +86,12 @@ def sms_to_unpaid_bal():
                 message = (
                     f"Hello {tenant.fullname},\n\n"
                     f"This is a friendly reminder that your current outstanding balance is KES {curr_balance_str}. "
-                    # f"Please settle your rent payment to avoid any inconvenience. "
-                    # f"We value your prompt attention to this matter.\n\n"
-                    # f"Thank you,\n"
-                    # f"Your Property Management Team"
                 )
 
                 recepient = [tenant.phone_number]
-                send_sms(message, recepient)
+                send_sms(message, recepient, client_id)
         except:
-            # typee = "N/A"
-            # curr_balance = "N/A"
-            # curr_balance_str = "No payment has ever been done"
             pass
-
-    print("DONE!!!!")
 
 
 def start():
@@ -100,7 +99,7 @@ def start():
     scheduler.add_job(
         sms_to_unpaid_bal, "cron", month="*", day=5, hour=8, minute=30, second=0
     )
-    # scheduler.add_job(sms_to_unpaid_bal, "interval", seconds=2)
+    # scheduler.add_job(sms_to_unpaid_bal, "interval", seconds=10)
     scheduler.start()
 
 
