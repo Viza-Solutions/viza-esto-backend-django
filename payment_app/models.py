@@ -44,5 +44,4 @@ class PaymentTransaction(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"PaymentTransaction - ID: {self.id}"
-
+        return f"PaymentTransaction - ID: {self.id} - Tenant : {self.tenant} balance : {self.balance}"
