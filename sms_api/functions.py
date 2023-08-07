@@ -81,11 +81,11 @@ def sms_to_unpaid_bal():
                 typee = "Underpaid"
 
                 # print(curr_balance)
-                curr_balance_str = f"{abs(curr_balance):.2f}"  # Format balance with two decimal places
+                curr_balance_str = f"{abs(curr_balance):,.2f}"  # Format balance with two decimal places
 
                 message = (
                     f"Hello {tenant.fullname},\n\n"
-                    f"This is a friendly reminder that your current outstanding balance is KES {curr_balance_str:.2f}. "
+                    f"This is a friendly reminder that your current outstanding balance is KES {curr_balance_str}. "
                 )
 
                 recepient = [tenant.phone_number]
@@ -99,7 +99,7 @@ def start():
     # scheduler.add_job(
     #     sms_to_unpaid_bal, "cron", month="*", day=5, hour=8, minute=30, second=0
     # )
-    scheduler.add_job(sms_to_unpaid_bal, "interval", seconds=4)
+    scheduler.add_job(sms_to_unpaid_bal, "interval", seconds=10)
     scheduler.start()
 
 
