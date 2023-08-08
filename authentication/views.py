@@ -74,7 +74,7 @@ def user_detail(request, pk):
     except User.DoesNotExist:
         return Response(status=404)
 
-    serializer = UserSerializer(user)
+    serializer = UserSerializerrrrr(user)
     return Response(serializer.data)
 
 
