@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 from client_app.models import *
 from property_app.models import *
 
-
+ 
 # hello this is Zacky project
 class MyUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_fields):
