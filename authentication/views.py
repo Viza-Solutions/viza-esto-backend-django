@@ -85,7 +85,7 @@ def user_list(request, client_id):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(["PATCH"])
+@api_view(["PUT"])
 def user_update(request, pk):
     try:
         user = User.objects.get(pk=pk)
