@@ -36,6 +36,6 @@ class JWTAuthentication(BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token is invalid,")
 
         except User.DoesNotExist as no_user:
-            raise exceptions.AuthenticationFailed("No such user")
+            raise exceptions.AuthenticationFailed("No such user(tkn)")
 
         return super().authenticate(request)
