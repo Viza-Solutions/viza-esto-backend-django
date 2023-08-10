@@ -156,3 +156,4 @@ def delete_user_mapping(request, pk):
             {"detail": "An error occurred while deleting the user mapping."},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
+ 
