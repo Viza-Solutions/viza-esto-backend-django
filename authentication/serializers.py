@@ -63,6 +63,11 @@ class UserSerializerrrrr(serializers.ModelSerializer):
             "last_name",
             "phone_number",
             "user_status",
+            "user_type",
+            "propertyy",
+            "client",
+            "created_at",
+            "updated_at"
         ]
 
 
