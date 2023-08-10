@@ -189,7 +189,7 @@ def create_payment_transaction(request):
             f"Your rent payment of KES {amount_paid:,.2f} has been successfully received"
             f"{mm}."
             # f"Should you have any queries or require further assistance, please don't hesitate to reach out. Thank you for choosing us as your property management team.\n\n"
-            # f"Best regards,\n" 
+            # f"Best regards,\n"
             # f"Your Property Management Team"
         )
         recepient = [tenant.phone_number]
@@ -434,35 +434,15 @@ def pdf_report_view(request, tenant_id):
         doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
 
         # Create the table and add data
-        data = [
-            [
-                "Transaction No.",
-                "Amount",
-                "Balance",
-                "Month",
-                "Year",
-                "Payment Method",
-                "Reference",
-                "Description",
-                "Processed By",
-                "Client",
-                "Processed On",
-            ]
-        ]
+        data = [["Time", "Description", "Reference", "Amount", "Balance"]]
         for transaction in queryset:
             data.append(
                 [
-                    transaction.id,
+                    transaction.created_at,
+                    transaction.description,
+                    transaction.reference,
                     transaction.amount,
                     transaction.balance,
-                    transaction.month,
-                    transaction.year,
-                    str(transaction.payment_method),
-                    transaction.reference,
-                    transaction.description,
-                    str(transaction.processed_by),
-                    str(transaction.client),
-                    transaction.created_at,
                 ]
             )
 
