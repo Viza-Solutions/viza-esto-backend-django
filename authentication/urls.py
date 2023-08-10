@@ -18,3 +18,4 @@ urlpatterns = [
     path("prop-assign", create_user_mapping, name="create_user_mapping"),
     path("prop-assign/del/<int:pk>", delete_user_mapping, name="delete_user_mapping"),
 ]
+ 
