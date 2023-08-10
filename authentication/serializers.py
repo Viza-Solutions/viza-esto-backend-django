@@ -90,7 +90,7 @@ class PropertySerializer(serializers.ModelSerializer):
         model = Property
         fields = "__all__"
 
-class UserMappingSerializer(serializers.ModelSerializer):
+class UserMappingSerializerrr(serializers.ModelSerializer):
     property_linked = PropertySerializer()
     
     class Meta:
