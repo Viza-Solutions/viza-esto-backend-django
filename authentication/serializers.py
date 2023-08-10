@@ -81,3 +81,18 @@ class UserMappingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMapping
         fields = "__all__"
+
+
+from property_app.models import *
+
+class PropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
+        fields = "__all__"
+
+class UserMappingSerializer(serializers.ModelSerializer):
+    property_linked = PropertySerializer()
+    
+    class Meta:
+        model = UserMapping
+        fields = "__all__"

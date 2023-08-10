@@ -114,7 +114,7 @@ def get_user_mappings_all(request):
 @api_view(["GET"])
 def get_user_mappings(request, user_id):
     user_mappings = UserMapping.objects.filter(user__id=user_id)
-    serializer = UserMappingSerializer(user_mappings, many=True)
+    serializer = UserMappingSerializerrr(user_mappings, many=True)
     return Response(serializer.data)
 
 
