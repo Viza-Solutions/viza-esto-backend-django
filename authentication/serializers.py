@@ -49,7 +49,13 @@ class LoginSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username", "email", "is_staff", "is_active",)
+        fields = (
+            "id",
+            "username",
+            "email",
+            "is_staff",
+            "is_active",
+        )
 
 
 class UserSerializerrrrr(serializers.ModelSerializer):
@@ -67,9 +73,8 @@ class UserSerializerrrrr(serializers.ModelSerializer):
             "propertyy",
             "client",
             "created_at",
-            "updated_at"
+            "updated_at",
         ]
-
 
 
 class UserMappingSerializer(serializers.ModelSerializer):
