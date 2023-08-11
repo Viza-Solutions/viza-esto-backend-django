@@ -77,8 +77,8 @@ class Room(models.Model):
     is_available = models.BooleanField(default=True)
     description = models.TextField(blank=True, null=True)
     room_type = models.ForeignKey(RoomType, on_delete=models.SET_NULL, null=True)
-    bedrooms = models.PositiveIntegerField(null=True, blank=True)
-    bathrooms = models.PositiveIntegerField(null=True, blank=True)
+    bedrooms = models.CharField(null=True, blank=True)
+    bathrooms = models.CharField(null=True, blank=True)
     size = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     monthly_price = models.DecimalField(
         max_digits=10,
