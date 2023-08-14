@@ -277,9 +277,6 @@ def close_tenant_notice(request, notice_id):
 def client_tenant_notice_list(request, client_id):
     try:
         tenant_notices = TenantNotice.objects.filter(client_id=client_id)
-        # You can also apply additional filtering or ordering if needed
-
-        # Serialize the queryset if you have a serializer defined
         serializer = TenantNoticeSerializer(tenant_notices, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -294,9 +291,6 @@ def client_tenant_notice_list(request, client_id):
 def property_tenant_notice_list(request, property_id):
     try:
         tenant_notices = TenantNotice.objects.filter(property_id=property_id)
-        # You can also apply additional filtering or ordering if needed
-
-        # Serialize the queryset if you have a serializer defined
         serializer = TenantNoticeSerializer(tenant_notices, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
