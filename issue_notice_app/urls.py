@@ -18,4 +18,9 @@ urlpatterns = [
     path('notice/delete/<int:notice_id>', views.delete_tenant_notice, name='delete-tenant-notice'),
     path('notices/pending-notices', views.pending_notices, name='pending-notices'),
     path('notices/close/<int:notice_id>', views.close_tenant_notice, name='close_tenant_notice'),
+
+    path('property-tenant-notices/<int:property_id>', views.property_tenant_notice_list, name='property-tenant-notices'),
+    path('client-tenant-notices/<int:client_id>', views.client_tenant_notice_list, name='client-tenant-notices'),
+
+
 ]

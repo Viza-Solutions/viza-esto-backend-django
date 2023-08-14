@@ -271,3 +271,37 @@ def close_tenant_notice(request, notice_id):
             {"message": "Tenant Notice is already closed."},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+
+@api_view(["GET"])
+def client_tenant_notice_list(request, client_id):
+    try:
+        tenant_notices = TenantNotice.objects.filter(client_id=client_id)
+        # You can also apply additional filtering or ordering if needed
+
+        # Serialize the queryset if you have a serializer defined
+        serializer = TenantNoticeSerializer(tenant_notices, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except TenantNotice.DoesNotExist:
+        return Response(
+            {"error": "No tenant notices found for the specified client."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+
+@api_view(["GET"])
+def property_tenant_notice_list(request, property_id):
+    try:
+        tenant_notices = TenantNotice.objects.filter(property_id=property_id)
+        # You can also apply additional filtering or ordering if needed
+
+        # Serialize the queryset if you have a serializer defined
+        serializer = TenantNoticeSerializer(tenant_notices, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except TenantNotice.DoesNotExist:
+        return Response(
+            {"error": "No tenant notices found for the specified property."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
