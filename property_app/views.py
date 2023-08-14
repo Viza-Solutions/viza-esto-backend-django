@@ -5,6 +5,10 @@ from .serializers import *
 from rest_framework.exceptions import NotFound
 from rest_framework import status
 
+import csv
+from django.http import HttpResponse
+from rest_framework.decorators import api_view
+
 
 @api_view(["GET"])
 def property_list(request):
@@ -261,3 +265,37 @@ def delete_room_type(request, room_type_id):
     return Response(
         {"message": "Room type deleted successfully"}, status=status.HTTP_204_NO_CONTENT
     )
+
+
+# csv
+
+from rest_framework.decorators import authentication_classes, permission_classes
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def export_room_csv_headers(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="room_headers.csv"'
+
+    writer = csv.writer(response)
+    headers = ['Room Number', 'Floor', 'Description', 'Room Type',
+               'Bedrooms', 'Bathrooms', 'Size', 'Monthly Price', 'Added By']
+    writer.writerow(headers)
+
+    return response
+
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def export_property_csv_headers(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="property_headers.csv"'
+
+    writer = csv.writer(response)
+    headers = ['Name', 'Country', 'Town', 'Address', 'Description',
+               'Rooms', 'Status']
+    writer.writerow(headers)
+
+    return response

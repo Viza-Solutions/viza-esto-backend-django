@@ -35,4 +35,7 @@ urlpatterns = [
     path('delete-all-properties', delete_all_properties, name='delete-all-properties'),
 
 
+    # csv
+    path('room-csv-template', export_room_csv_headers, name='room-csv-headers'),
+    path('property-csv-template', export_property_csv_headers, name='property-csv-headers'),
 ]
