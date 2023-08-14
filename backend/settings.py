@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     "payment_app",
     "expense_app",
     "issue_notice_app",
-    "sms_api"
+    "sms_api",
+    "dashboard_app",
 ]
 
 MIDDLEWARE = [
@@ -110,7 +111,6 @@ DATABASES = {
     #  'default':dj_database_url.parse('postgres://tododb_f2wq_user:yrwYzyW911TejHyLos3Kbf76xL5FpU6N@dpg-ciouu4lgkuvrtoatcung-a.oregon-postgres.render.com/tododb_f2wq')
     "default": dj_database_url.parse(env("DATABASE_URL"))
 }
- 
 
 
 # Password validation

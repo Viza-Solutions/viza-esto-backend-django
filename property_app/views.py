@@ -272,8 +272,8 @@ def delete_room_type(request, room_type_id):
 from rest_framework.decorators import authentication_classes, permission_classes
 
 @api_view(['GET'])
-@authentication_classes([])
-@permission_classes([])
+# @authentication_classes([])
+# @permission_classes([])
 def export_room_csv_headers(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="room_headers.csv"'
@@ -287,8 +287,6 @@ def export_room_csv_headers(request):
 
 
 @api_view(['GET'])
-@authentication_classes([])
-@permission_classes([])
 def export_property_csv_headers(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="property_headers.csv"'
