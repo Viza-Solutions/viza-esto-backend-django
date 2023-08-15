@@ -44,7 +44,8 @@ def sms_to_property_tenants(request, property_id):
     )
     for tenant in tenants:
         try:
-            tenant_info(tenant, message)
+            pp = tenant_info(tenant, message)
+            print(pp)
         except Exception as e:
             print(f"Error processing tenant: {e}")
 
@@ -57,9 +58,9 @@ def tenant_info(tenant, message):
     fullname = tenant.fullname
     email = tenant.email
     phone_number = tenant.phone_number
-    # phone_number = "+254790780464"
+    client_id = tenant.client_id
 
     try:
-        send_sms(message, [phone_number])
+        send_sms(message, [phone_number], client_id)
     except Exception as e:
         print(f"Error sending SMS to tenant {fullname}: {e}")
