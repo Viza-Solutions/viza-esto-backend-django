@@ -44,8 +44,7 @@ def sms_to_property_tenants(request, property_id):
     )
     for tenant in tenants:
         try:
-            pp = tenant_info(tenant, message)
-            print(pp)
+            tenant_info(tenant, message)
         except Exception as e:
             print(f"Error processing tenant: {e}")
 
