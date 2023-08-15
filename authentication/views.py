@@ -55,14 +55,20 @@ class LoginAPIView(GenericAPIView):
         user = authenticate(username=email, password=password)
 
         if user:
-            serializer = self.serializer_class(user)
-            return Response(
-                {"Success": True, "Code": 200, "Details": serializer.data},
-                status=status.HTTP_200_OK,
-            )
+            if user.user_status == "Active":
+                serializer = self.serializer_class(user)
+                return Response(
+                    {"Success": True, "Code": 200, "Details": serializer.data},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"error": "User is not active"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
 
         return Response(
-            {"error": "Invalid credentials try again"},
+            {"error": "Invalid credentials, please try again"},
             status=status.HTTP_401_UNAUTHORIZED,
         )
 
@@ -156,4 +162,3 @@ def delete_user_mapping(request, pk):
             {"detail": "An error occurred while deleting the user mapping."},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
- 

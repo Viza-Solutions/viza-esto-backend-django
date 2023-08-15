@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 from client_app.models import *
 from property_app.models import *
 
- 
+
 # hello this is Zacky project
 class MyUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_fields):
@@ -152,7 +152,7 @@ class UserMapping(models.Model):
     property_linked = models.ForeignKey(Property, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('user', 'property_linked')  # Ensure unique combination
+        unique_together = ("user", "property_linked")  # Ensure unique combination
 
     def __str__(self):
         return f"UserMapping (user_id={self.user}, property_id={self.property_linked})"
