@@ -123,7 +123,9 @@ def property_total_expenses_for_current_month(property_id):
 
     total_expenses = (
         Expense.objects.filter(
-            date__year=current_year, date__month=current_month, linked_property=property_id
+            date__year=current_year,
+            date__month=current_month,
+            linked_property=property_id,
         ).aggregate(models.Sum("amount"))["amount__sum"]
         or 0.00
     )
@@ -134,13 +136,18 @@ def property_total_expenses_for_current_month(property_id):
 @api_view(["GET"])
 def fetch_dashboard_data_client(request, client_id):
     room_counts = client_room_counts(client_id)
+
+    available_count = room_counts["available_count"]
+    unavailable_count = room_counts["unavailable_count"]
+
     expiring_leases_count = client_expiring_leases_count(client_id)
     active_notice_count = get_active_notice_count_client(client_id)
     open_issue_count = get_open_issue_count(client_id)
     total_expenses = client_total_expenses_for_current_month(client_id)
 
     data = {
-        "room_counts": room_counts,
+        "available_count": available_count,
+        "unavailable_count": unavailable_count,
         "expiring_leases_count": expiring_leases_count,
         "active_notice_count": active_notice_count,
         "open_issue_count": open_issue_count,
@@ -153,13 +160,18 @@ def fetch_dashboard_data_client(request, client_id):
 @api_view(["GET"])
 def fetch_dashboard_data_property(request, property_id):
     room_counts = property_room_counts(property_id)
+
+    available_count = room_counts["available_count"]
+    unavailable_count = room_counts["unavailable_count"]
+
     expiring_leases_count = property_expiring_leases_count(property_id)
     active_notice_count = get_active_notice_count_property(property_id)
     open_issue_count = get_open_issue_count(property_id)
     total_expenses = property_total_expenses_for_current_month(property_id)
 
     data = {
-        "room_counts": room_counts,
+        "available_count": available_count,
+        "unavailable_count": unavailable_count,
         "expiring_leases_count": expiring_leases_count,
         "active_notice_count": active_notice_count,
         "open_issue_count": open_issue_count,

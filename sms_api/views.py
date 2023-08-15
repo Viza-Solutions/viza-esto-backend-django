@@ -55,7 +55,6 @@ def sms_to_property_tenants(request, property_id):
 
 def tenant_info(tenant, message):
     fullname = tenant.fullname
-    email = tenant.email
     phone_number = tenant.phone_number
     client_id = tenant.client_id
 
