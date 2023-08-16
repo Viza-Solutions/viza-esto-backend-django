@@ -168,9 +168,9 @@ def retrieve_tenant(request, pk):
             if curr_balance > 0:
                 curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
                 typee = "Prepaid"
-            elif curr_balance==0:
-                curr_balance_str = str(curr_balance) + "/="
-                typee = "No balance"
+            elif curr_balance == 0:
+                curr_balance_str = str(curr_balance) + ""
+                typee = "Cleared"
             else:
                 curr_balance_str = "Underpaid Amount Ksh. " + str(curr_balance) + "/="
                 typee = "Underpaid"
