@@ -38,7 +38,8 @@ class Tenant(models.Model):
     id_number = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone_number = KenyanPhoneNumberField()
-    date_of_birth = models.DateField(blank=True, null=True)
+    date_of_birth = models.CharField(max_length=50, blank=True, null=True)
+
     date_of_lease = models.DateField(blank=True, null=True)
     gender = models.CharField(
         max_length=6,
@@ -56,12 +57,13 @@ class Tenant(models.Model):
     deposit_amount_paid = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
+    date_of_deposit = models.DateTimeField(default="2023-08-16")
+
     deleted = models.BooleanField(default=False)
 
     # next of kin
     next_of_kin = models.CharField(blank=True, null=True)
     next_of_kin_contact = KenyanPhoneNumberField(blank=True, null=True)
-
 
     # AGENT
     intro_by = models.CharField(
