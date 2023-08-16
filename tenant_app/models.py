@@ -63,7 +63,7 @@ class Tenant(models.Model):
 
     # next of kin
     next_of_kin = models.CharField(blank=True, null=True)
-    next_of_kin_contact = KenyanPhoneNumberField(blank=True, null=True)
+    next_of_kin_contact = models.CharField(blank=True, null=True)
 
     # AGENT
     intro_by = models.CharField(
