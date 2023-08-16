@@ -169,10 +169,11 @@ def retrieve_tenant(request, pk):
                 curr_balance_str = "Prepaid Amount Ksh. " + str(curr_balance) + "/="
                 typee = "Prepaid"
             elif curr_balance == 0:
-                curr_balance_str = str(curr_balance) + ""
+                # curr_balance_str = str(curr_balance) + ""
+                curr_balance_str =  "All Rent balance has been cleared"
                 typee = "Cleared"
             else:
-                curr_balance_str = "Balance Amount Ksh. " + str(curr_balance) + "/="
+                curr_balance_str = "Balance of Amount Ksh. " + str(curr_balance) + "/="
                 typee = "Balance"
         except:
             typee = "N/A"
