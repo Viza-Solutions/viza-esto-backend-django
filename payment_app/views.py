@@ -252,7 +252,7 @@ def excel_report_view(request, tenant_id):
             "Payment Method",
             "Reference",
             "Description",
-            "Processed By",
+            # "Processed By",
             "Created At",
         ]
         for col_num, header in enumerate(headers, start=1):
@@ -274,7 +274,7 @@ def excel_report_view(request, tenant_id):
                 str(transaction.payment_method),
                 transaction.reference,
                 transaction.description,
-                str(transaction.processed_by),
+                # str(transaction.processed_by),
                 transaction.created_at,
             ]
             for col_num, value in enumerate(data, start=1):
