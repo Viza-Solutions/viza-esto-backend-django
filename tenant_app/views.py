@@ -172,8 +172,8 @@ def retrieve_tenant(request, pk):
                 curr_balance_str = str(curr_balance) + ""
                 typee = "Cleared"
             else:
-                curr_balance_str = "Underpaid Amount Ksh. " + str(curr_balance) + "/="
-                typee = "Underpaid"
+                curr_balance_str = "Balance Amount Ksh. " + str(curr_balance) + "/="
+                typee = "Balance"
         except:
             typee = "N/A"
             curr_balance = "N/A"
