@@ -245,7 +245,6 @@ def excel_report_view(request, tenant_id):
         )
 
         headers = [
-            "ID",
             "Amount",
             "Balance",
             "Month",
@@ -254,7 +253,6 @@ def excel_report_view(request, tenant_id):
             "Reference",
             "Description",
             "Processed By",
-            "Client",
             "Created At",
         ]
         for col_num, header in enumerate(headers, start=1):
@@ -269,7 +267,6 @@ def excel_report_view(request, tenant_id):
         )
         for row_num, transaction in enumerate(queryset, start=2):
             data = [
-                transaction.id,
                 transaction.amount,
                 transaction.balance,
                 transaction.month,
@@ -278,7 +275,6 @@ def excel_report_view(request, tenant_id):
                 transaction.reference,
                 transaction.description,
                 str(transaction.processed_by),
-                str(transaction.client),
                 transaction.created_at,
             ]
             for col_num, value in enumerate(data, start=1):
