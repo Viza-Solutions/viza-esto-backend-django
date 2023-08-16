@@ -45,3 +45,4 @@ class PaymentTransaction(models.Model):
 
     def __str__(self):
         return f"PaymentTransaction - ID: {self.id} - Tenant : {self.tenant} balance : {self.balance}"
+ 
