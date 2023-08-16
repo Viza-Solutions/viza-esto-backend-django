@@ -280,7 +280,7 @@ def export_room_csv_headers(request):
 
     writer = csv.writer(response)
     headers = ['Room Number', 'Floor', 'Description', 'Room Type',
-               'Bedrooms', 'Bathrooms', 'Size', 'Monthly Price', 'Added By']
+               'Bedrooms', 'Bathrooms', 'Size', 'Monthly Price']
     writer.writerow(headers)
 
     return response
