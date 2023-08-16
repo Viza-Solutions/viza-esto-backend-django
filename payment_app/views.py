@@ -193,7 +193,7 @@ def create_payment_transaction(request):
             # f"Your Property Management Team"
         )
         recepient = [tenant.phone_number]
-        send_sms(message, recepient, client_id)
+        # send_sms(message, recepient, client_id)
 
         return Response(
             {
