@@ -45,4 +45,3 @@ class TenantAdmin(ImportExportModelAdmin):
         "created_at",
         "updated_at",
     )
-
