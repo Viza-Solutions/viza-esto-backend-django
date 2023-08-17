@@ -26,11 +26,12 @@ class UserAdmin(ImportExportModelAdmin):
     list_filter = ["client"]
 
 
-
-
 @admin.register(UserMapping)
 class UserMappingAdmin(admin.ModelAdmin):
     list_display = ("user", "property_linked")
-    search_fields = ("user__email", "user__username", "property_linked__name")  # Adjust the fields accordingly
+    search_fields = (
+        "user__email",
+        "user__username",
+        "property_linked__name",
+    )  # Adjust the fields accordingly
     list_filter = ("user", "property_linked")
-
