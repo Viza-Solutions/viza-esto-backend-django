@@ -6,6 +6,7 @@ from .models import EstateIssue, TenantNotice  # Adjust the import paths as need
 @admin.register(EstateIssue)
 class EstateIssueAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "title",
         "client",
         "added_by",
@@ -22,6 +23,7 @@ class EstateIssueAdmin(ImportExportModelAdmin):
 @admin.register(TenantNotice)
 class TenantNoticeAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "tenant",
         "client",
         "posted_by",
@@ -36,4 +38,3 @@ class TenantNoticeAdmin(ImportExportModelAdmin):
         "property__name",
     )
     list_filter = ("is_active", "date_to_vacate")
-

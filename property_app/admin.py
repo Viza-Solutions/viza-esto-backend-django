@@ -6,6 +6,7 @@ from .models import Property, RoomType, Room  # Adjust the import paths as neede
 @admin.register(Property)
 class PropertyAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "name",
         "client",
         "added_by",
@@ -31,6 +32,7 @@ class RoomTypeAdmin(ImportExportModelAdmin):
 @admin.register(Room)
 class RoomAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "room_number",
         "property",
         "floor",
@@ -44,4 +46,3 @@ class RoomAdmin(ImportExportModelAdmin):
     )
     search_fields = ("room_number", "property__name", "client__name")
     list_filter = ("property", "room_type", "client", "is_available", "deleted")
-

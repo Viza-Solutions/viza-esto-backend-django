@@ -6,6 +6,7 @@ from .models import Tenant  # Adjust the import paths as needed
 @admin.register(Tenant)
 class TenantAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "fullname",
         "alternative_names",
         "id_number",

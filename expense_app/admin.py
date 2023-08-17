@@ -5,7 +5,7 @@ from .models import Expense, ExpenseType  # Adjust the import paths as needed
 
 @admin.register(ExpenseType)
 class ExpenseTypeAdmin(ImportExportModelAdmin):
-    list_display = ("name", "parent")
+    list_display = ("id", "name", "parent")
     search_fields = ("name",)
     list_filter = ("parent",)
 
@@ -13,6 +13,7 @@ class ExpenseTypeAdmin(ImportExportModelAdmin):
 @admin.register(Expense)
 class ExpenseAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "amount",
         "description",
         "expense_type",

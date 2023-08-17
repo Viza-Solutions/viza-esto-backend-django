@@ -9,6 +9,7 @@ from .models import (
 @admin.register(PaymentMethod)
 class PaymentMethodAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "name",
         "client",
         "added_by",
@@ -23,6 +24,7 @@ class PaymentMethodAdmin(ImportExportModelAdmin):
 @admin.register(PaymentTransaction)
 class PaymentTransactionAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "tenant",
         "amount",
         "balance",

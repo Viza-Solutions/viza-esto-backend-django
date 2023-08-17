@@ -6,6 +6,7 @@ from .models import Client  # Adjust the import path as needed
 @admin.register(Client)
 class ClientAdmin(ImportExportModelAdmin):
     list_display = (
+        "id",
         "name",
         "phone_number",
         "address",
@@ -20,5 +21,3 @@ class ClientAdmin(ImportExportModelAdmin):
     )
     search_fields = ("name", "phone_number", "email")
     list_filter = ("status", "deleted")
-
-
