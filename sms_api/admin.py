@@ -5,6 +5,6 @@ from .models import SmsCredential  # Adjust the import paths as needed
 
 @admin.register(SmsCredential)
 class SmsCredentialAdmin(ImportExportModelAdmin):
-    list_display = ("id", "client", "username")
+    list_display = ("client", "username")
     search_fields = ("client__name", "username")
     list_filter = ("client",)
