@@ -1,4 +1,11 @@
 from django.contrib import admin
-from .models import *
+from import_export.admin import ImportExportModelAdmin
+from .models import SmsCredential  # Adjust the import paths as needed
 
-admin.site.register(SmsCredential)
+
+@admin.register(SmsCredential)
+class SmsCredentialAdmin(ImportExportModelAdmin):
+    list_display = ("client", "username")
+    search_fields = ("client__name", "username")
+    list_filter = ("client",)
+
