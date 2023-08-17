@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "issue_notice_app",
     "sms_api",
     "dashboard_app",
+    "import_export",
 ]
 
 MIDDLEWARE = [
