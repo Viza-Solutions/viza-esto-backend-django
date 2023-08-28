@@ -57,7 +57,7 @@ class Tenant(models.Model):
     deposit_amount_paid = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
-    date_of_deposit = models.DateTimeField(default="2023-08-16")
+    date_of_deposit = models.DateTimeField()
 
     deleted = models.BooleanField(default=False)
 

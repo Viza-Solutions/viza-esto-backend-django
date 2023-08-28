@@ -32,4 +32,3 @@ class Expense(models.Model):
 
     def __str__(self):
         return f"{self.expense_type} - {self.amount}"
-

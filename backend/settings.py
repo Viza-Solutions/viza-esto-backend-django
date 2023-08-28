@@ -107,7 +107,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 
 import dj_database_url
-
+ 
 DATABASES = {
     #  'default':dj_database_url.parse('postgres://tododb_f2wq_user:yrwYzyW911TejHyLos3Kbf76xL5FpU6N@dpg-ciouu4lgkuvrtoatcung-a.oregon-postgres.render.com/tododb_f2wq')
     "default": dj_database_url.parse(env("DATABASE_URL"))
