@@ -19,9 +19,9 @@ class PaymentMethodAdmin(ImportExportModelAdmin):
     )
     search_fields = ("name", "client__name", "added_by__username")
     list_filter = ("client", "deleted", "created_at", "updated_at")
-    list_editable = ('name')
+    list_editable = ("name",)
 
-
+ 
 @admin.register(PaymentTransaction)
 class PaymentTransactionAdmin(ImportExportModelAdmin):
     list_display = (
