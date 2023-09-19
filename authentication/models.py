@@ -138,7 +138,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             {
                 "username": self.username,
                 "email": self.email,
-                # "exp": datetime.utcnow() + timedelta(months=12),
+                # "exp": datetime.utcnow() + timedelta(minutes=12),
             },
             settings.SECRET_KEY,
             algorithm="HS256",
