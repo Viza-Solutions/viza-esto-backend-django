@@ -6,6 +6,10 @@ from rest_framework import exceptions
 import jwt
 
 from django.conf import settings
+from django.http import JsonResponse
+from jwt import DecodeError
+from rest_framework import status
+from rest_framework.response import Response
 
 
 class JWTAuthentication(BaseAuthentication):
@@ -30,12 +34,24 @@ class JWTAuthentication(BaseAuthentication):
             return (user, token)
 
         except jwt.ExpiredSignatureError as ex:
-            raise exceptions.AuthenticationFailed("Token is expired, login again")
+            # raise exceptions.AuthenticationFailed("Token is expired, login again")
+            return Response(
+                {"status": 401, "message": "Token is expired"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
         except jwt.DecodeError as ex:
-            raise exceptions.AuthenticationFailed("Token is invalid,")
+            # raise exceptions.AuthenticationFailed("Token is invalid,")
+            return Response(
+                {"status": 401, "message": "Token is invalid"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
         except User.DoesNotExist as no_user:
-            raise exceptions.AuthenticationFailed("No such user(tkn)")
+            # raise exceptions.AuthenticationFailed("No such user (tkn)")
+            return Response(
+                {"status": 401, "message": "No such user (tkn)"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
         return super().authenticate(request)
