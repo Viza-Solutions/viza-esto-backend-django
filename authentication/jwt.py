@@ -34,18 +34,18 @@ class JWTAuthentication(BaseAuthentication):
             return (user, token)
 
         except jwt.ExpiredSignatureError as ex:
-            # raise exceptions.AuthenticationFailed("Token is expired, login again")
-            return JsonResponse({"status": 401, "message": "Token is invalid"}, status=status.HTTP_401_UNAUTHORIZED)
+            raise exceptions.AuthenticationFailed("Token is expired, login again")
+            # return JsonResponse({"status": 401, "message": "Token is expired, login again"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
         except jwt.DecodeError as ex:
-            # raise exceptions.AuthenticationFailed("Token is invalid,")
-            return JsonResponse({"status": 401, "message": "Token is invalid"}, status=status.HTTP_401_UNAUTHORIZED)
+            raise exceptions.AuthenticationFailed("Token is invalid,")
+            # return JsonResponse({"status": 401, "message": "Token is invalid"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
         except User.DoesNotExist as no_user:
-            # raise exceptions.AuthenticationFailed("No such user (tkn)")
-            return JsonResponse({"status": 401, "message": "Token is invalid"}, status=status.HTTP_401_UNAUTHORIZED)
+            raise exceptions.AuthenticationFailed("No such user (tkn)")
+            # return JsonResponse({"status": 401, "message": "Token is invalid"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
         return super().authenticate(request)
