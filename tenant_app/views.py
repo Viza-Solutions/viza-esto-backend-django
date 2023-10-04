@@ -8,7 +8,7 @@ from .serializers import *
 from rest_framework import serializers
 
 from datetime import datetime
-
+ 
 
 @api_view(["GET"])
 def tenant_list(request):
