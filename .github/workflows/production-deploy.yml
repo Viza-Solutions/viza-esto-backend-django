@@ -1,0 +1,115 @@
+name: 🚀 Production deployment
+on:
+  push:
+    branches: ["main"]
+permissions:
+  contents: read
+jobs:
+  startnotification:
+    name: 💬 Starting [Production] deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_notification: true
+          message: |
+            🏗️ New [Production] deployment started - run ${{ github.run_id }}
+            Details:
+            - By: ${{ github.actor }}
+            - Description: ${{ github.event.commits[0].message }}
+            - Code: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            - Build: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      # Add other steps here
+
+  build-and-deploy:
+    name: 🏗 Building and deploying
+    runs-on: ubuntu-latest
+    needs: [startnotification]
+    steps:
+      - uses: actions/checkout@master
+
+      - name: 🗝 Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          known_hosts: unnecessary
+
+      - name: ✔ Adding Known Hosts
+        run: ssh-keyscan -p ${{ secrets.SSH_PORT}} -H ${{ secrets.SSH_HOST }}  >> ~/.ssh/known_hosts
+
+      - name: 🤐 Stopping Production Server Instance
+        uses: appleboy/ssh-action@master
+        with:
+          debug: true
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd projects/django/viza-esto-backend-django
+            source venv/bin/activate
+            (pgrep -f gunicorn | xargs kill -9 &> /dev/null &) #kill gunicorn service
+
+      - name: 🌎 Syncing files
+        uses: appleboy/ssh-action@master
+        with:
+          debug: true
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd projects/django/viza-esto-backend-django
+            source venv/bin/activate
+            ls -a ~/.ssh/
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/github-auth
+            git pull --ff-only origin main
+
+      - name: 🚀 Restarting Production Instance
+        uses: appleboy/ssh-action@master
+        with:
+          debug: true
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd projects/django/viza-esto-backend-django
+            source venv/bin/activate
+            # pip install pip --upgrade #***** optional *****
+            pip install -r requirements.txt > /dev/null 2>&1 #*****optional *****
+            # python manage.py makemigrations > /dev/null 2>&1
+            python manage.py migrate > /dev/null 2>&1
+            (gunicorn backend.wsgi:application --bind ${{ secrets.SSH_HOST }}:${{ secrets.SERVER_APP_PORT }} > /dev/null 2>&1 &) #start gunicorn service
+
+      - name: =========== All done. Cleaning up ♻️  ===========
+        run: ls
+      - name: Build Alerts
+        if: ${{ failure() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🚨 Deployment failed [Production]🚨
+            Build ${{ github.run_id }} failed
+
+            Something went wrong while building and deploying the Django app. See the details here:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Build Alerts
+        if: ${{ success() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            💸 Deployment succeeded [Production]💸
+            Build ${{ github.run_id }} successful.
+
+            App built and deployed successfully. See the details here:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
