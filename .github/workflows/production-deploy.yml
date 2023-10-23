@@ -16,7 +16,7 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           disable_notification: true
           message: |
-            🏗️ New [Production] deployment started - run ${{ github.run_id }}
+            🏗️ Viza-Esto [Production] deployment started - run ${{ github.run_id }}
             Details:
             - By: ${{ github.actor }}
             - Description: ${{ github.event.commits[0].message }}
@@ -95,7 +95,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🚨 Deployment failed [Production]🚨
+            🚨 Viza-Esto Deployment failed [Production]🚨
             Build ${{ github.run_id }} failed
 
             Something went wrong while building and deploying the Django app. See the details here:
@@ -108,7 +108,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            💸 Deployment succeeded [Production]💸
+            💸 Viza-Esto Deployment succeeded [Production]💸
             Build ${{ github.run_id }} successful.
 
             App built and deployed successfully. See the details here:
