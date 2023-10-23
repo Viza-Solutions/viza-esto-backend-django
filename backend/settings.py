@@ -11,20 +11,18 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
+import environ
+
+
+env = environ.Env()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-
-import environ
-
-env = environ.Env()
-environ.Env.read_env()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
@@ -105,11 +103,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 #     }
 # }
 
-
-import dj_database_url
- 
 DATABASES = {
-    #  'default':dj_database_url.parse('postgres://tododb_f2wq_user:yrwYzyW911TejHyLos3Kbf76xL5FpU6N@dpg-ciouu4lgkuvrtoatcung-a.oregon-postgres.render.com/tododb_f2wq')
     "default": dj_database_url.parse(env("DATABASE_URL"))
 }
 
