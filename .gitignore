@@ -26,7 +26,6 @@ wheels/
 *.egg
 *.docx
 documents/
-migrations/
 .env
 .Dockerfile
 .docker-compose.yml
