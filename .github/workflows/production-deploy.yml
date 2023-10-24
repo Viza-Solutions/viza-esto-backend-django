@@ -51,7 +51,7 @@ jobs:
           script: |
             cd projects/django/viza-esto-backend-django
             source venv/bin/activate
-            (pgrep -f gunicorn | xargs kill -9 &> /dev/null &) #kill gunicorn service
+            sudo systemctl stop viza_esto.service #stop viza_esto service
 
       - name: 🌎 Syncing files
         uses: appleboy/ssh-action@master
@@ -84,7 +84,7 @@ jobs:
             pip install -r requirements.txt > /dev/null 2>&1 #*****optional *****
             # python manage.py makemigrations > /dev/null 2>&1
             python manage.py migrate > /dev/null 2>&1
-            (gunicorn backend.wsgi:application --bind ${{ secrets.SSH_HOST }}:${{ secrets.SERVER_APP_PORT }} > /dev/null 2>&1 &) #start gunicorn service
+            sudo systemctl start viza_esto.service #start viza_esto service
 
       - name: =========== All done. Cleaning up ♻️  ===========
         run: ls
