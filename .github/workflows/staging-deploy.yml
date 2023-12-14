@@ -2,6 +2,9 @@ name: 🦺 Staging deployment
 on:
   push:
     branches: ["develop"]
+
+  workflow_dispatch:
+    
 permissions:
   contents: read
 jobs:
