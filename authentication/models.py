@@ -118,7 +118,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     propertyy = models.CharField(max_length=50, blank=True, null=True)
 
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    # client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=False)
 
     # created at
     created_at = models.DateTimeField(_("created at"), default=timezone.now)
