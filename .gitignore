@@ -26,7 +26,6 @@ wheels/
 *.egg
 *.docx
 documents/
-migrations/
 .env
 .Dockerfile
 .docker-compose.yml
@@ -360,5 +359,3 @@ random
 
 
 db.sqlite3
-**/migrations/*.py
-!**/migrations/__init__.py

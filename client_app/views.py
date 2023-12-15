@@ -10,7 +10,7 @@ def client_list(request):
     serializer = ClientSerializer(clients, many=True)
     return Response(serializer.data)
 
-
+ 
 @api_view(["POST"])
 def create_client(request):
     serializer = ClientSerializer(data=request.data)
