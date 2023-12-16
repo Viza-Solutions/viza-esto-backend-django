@@ -29,9 +29,11 @@ SECRET_KEY = env("SECRET_KEY")
 # SECRET_KEY = 'django-insecure-4fp^$m%@j5@o3xe-%w*^b@-s#ku@*8436(6pk#b*2d-d@khjyy'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS")
+CSRF_TRUSTED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS")
 
 
 # Application definition
